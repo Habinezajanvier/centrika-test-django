@@ -115,7 +115,7 @@ def card_topup(request):
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
-                item.access_permissions_access_permission_name)
+                item.access_permissions_access_permission_name.access_permission_name)
 
         if 'card-topup' not in items_access_permissions:
             response = {
@@ -188,7 +188,7 @@ def card_topup_complete(request):
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
-                item.access_permissions_access_permission_name)
+                item.access_permissions_access_permission_name.access_permission_name)
 
         if 'card-topup' not in items_access_permissions:
             response = {
@@ -291,7 +291,7 @@ def card_balance(request):
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
-                item.access_permissions_access_permission_name)
+                item.access_permissions_access_permission_name.access_permission_name)
 
         if 'card-fetch-balance' not in items_access_permissions:
             response = {
@@ -363,7 +363,7 @@ def card_balance_complete(request):
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
-                item.access_permissions_access_permission_name)
+                item.access_permissions_access_permission_name.access_permission_name)
 
         if 'card-fetch-balance' not in items_access_permissions:
             response = {
