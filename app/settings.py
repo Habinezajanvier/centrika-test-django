@@ -27,7 +27,7 @@ APP_DIR = 'acgroup-incity-apis'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-IS_LOCAL = True
+IS_LOCAL = False
 
 if IS_LOCAL:
     ALLOWED_HOSTS = ['*']
