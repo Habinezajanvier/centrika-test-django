@@ -90,6 +90,160 @@ def operator_login(request):
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes((AllowAny,))
+def card_balance(request):
+    try:
+        print(request.headers)
+        api_token = request.headers['x-auth']
+        try:
+            operator = Operators.objects.get(operator_auth_key=api_token)
+        except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
+            response = {
+                "error": True,
+                "message": 'Invalid token.',
+            }
+            return send_response(response, HTTP_400_BAD_REQUEST)
+
+        if operator.operator_status != Operators.STATUS_ACTIVE:
+            response = {
+                "error": True,
+                "message": 'Your account is not active yet. Please contact admin for support.',
+            }
+            return send_response(response, HTTP_403_FORBIDDEN)
+
+        operator_access_permissions = Operator_Access_Permissions.objects.filter(
+            operators_operator_id=operator).all()
+        items_access_permissions = []
+        for item in operator_access_permissions:
+            items_access_permissions.append(
+                item.access_permissions_access_permission_name.access_permission_name)
+
+        if 'card-fetch-balance' not in items_access_permissions:
+            response = {
+                "error": True,
+                "message": 'You dont have access to card-fetch-balance. Please contact admin for support.',
+            }
+            return send_response(response, HTTP_403_FORBIDDEN)
+
+        print(request.body)
+        request_body = json.loads(request.body, encoding='utf-8')
+        print(request_body)
+        print(request.POST)
+
+        card_number = request_body["card_number"]
+
+        error, message, access_token, session_data, card_log_id = V2_Methods_Asis.get_payment_session(
+            request, operator, None, card_number, 0)
+        if error:
+            response = {
+                "error": True,
+                "message": message,
+            }
+            return send_response(response, HTTP_400_BAD_REQUEST)
+
+        response = {
+            "error": False,
+            "message": 'Success',
+            "data": {
+                'card_number': card_number,
+                'card_log_id': card_log_id,
+                'access_token': access_token,
+                'session_data': session_data,
+            }
+        }
+        return send_response(response, HTTP_200_OK)
+    except Exception as e:
+        response = {
+            "error": True,
+            "message": 'Exception: ' + str(e),
+        }
+        return send_response(response, HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def card_balance_complete(request):
+    try:
+        print(request.headers)
+        api_token = request.headers['x-auth']
+        try:
+            operator = Operators.objects.get(operator_auth_key=api_token)
+        except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
+            response = {
+                "error": True,
+                "message": 'Invalid token.',
+            }
+            return send_response(response, HTTP_400_BAD_REQUEST)
+
+        if operator.operator_status != Operators.STATUS_ACTIVE:
+            response = {
+                "error": True,
+                "message": 'Your account is not active yet. Please contact admin for support.',
+            }
+            return send_response(response, HTTP_403_FORBIDDEN)
+
+        operator_access_permissions = Operator_Access_Permissions.objects.filter(
+            operators_operator_id=operator).all()
+        items_access_permissions = []
+        for item in operator_access_permissions:
+            items_access_permissions.append(
+                item.access_permissions_access_permission_name.access_permission_name)
+
+        if 'card-fetch-balance' not in items_access_permissions:
+            response = {
+                "error": True,
+                "message": 'You dont have access to card-fetch-balance. Please contact admin for support.',
+            }
+            return send_response(response, HTTP_403_FORBIDDEN)
+
+        print(request.body)
+        request_body = json.loads(request.body, encoding='utf-8')
+        print(request_body)
+        print(request.POST)
+
+        card_number = request_body["card_number"]
+        card_log_id = request_body["card_log_id"]
+        access_token = request_body["access_token"]
+        session_data = request_body["session_data"]
+        card_command = request_body["card_command"]
+
+        try:
+            card_log = Card_Logs.objects.get(
+                pk=card_log_id)
+        except(TypeError, ValueError, OverflowError, Card_Logs.DoesNotExist):
+            return True, 'Card log not found.', None
+
+        error, message, balance = V2_Methods_Asis.get_card_balance(
+            request, operator, None, card_number, 0, card_command, access_token, session_data, card_log, None)
+        if error:
+            response = {
+                "error": True,
+                "message": message,
+            }
+            return send_response(response, HTTP_400_BAD_REQUEST)
+
+        response = {
+            "error": False,
+            "message": 'Success',
+            "data": {
+                'card_number': card_number,
+                'card_log_id': card_log_id,
+                'access_token': access_token,
+                'card_balance': balance,
+            }
+        }
+        return send_response(response, HTTP_200_OK)
+    except Exception as e:
+        response = {
+            "error": True,
+            "message": 'Exception: ' + str(e),
+        }
+        return send_response(response, HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
 def card_topup(request):
     try:
         print(request.headers)
@@ -111,7 +265,7 @@ def card_topup(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_id=operator.operator_id).all()
+            operators_operator_id=operator).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
@@ -184,7 +338,7 @@ def card_topup_complete(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_id=operator.operator_id).all()
+            operators_operator_id=operator).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
@@ -206,8 +360,8 @@ def card_topup_complete(request):
         card_number = request_body["card_number"]
         card_log_id = request_body["card_log_id"]
         access_token = request_body["access_token"]
-        card_command = request_body["card_command"]
         session_data = request_body["session_data"]
+        card_command = request_body["card_command"]
 
         try:
             card_log = Card_Logs.objects.get(
@@ -266,7 +420,7 @@ def card_topup_complete(request):
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes((AllowAny,))
-def card_balance(request):
+def card_pay(request):
     try:
         print(request.headers)
         api_token = request.headers['x-auth']
@@ -287,16 +441,16 @@ def card_balance(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_id=operator.operator_id).all()
+            operators_operator_id=operator).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
                 item.access_permissions_access_permission_name.access_permission_name)
 
-        if 'card-fetch-balance' not in items_access_permissions:
+        if 'card-deduct-balance' not in items_access_permissions:
             response = {
                 "error": True,
-                "message": 'You dont have access to card-fetch-balance. Please contact admin for support.',
+                "message": 'You dont have access to card-deduct-balance. Please contact admin for support.',
             }
             return send_response(response, HTTP_403_FORBIDDEN)
 
@@ -305,21 +459,22 @@ def card_balance(request):
         print(request_body)
         print(request.POST)
 
+        amount = request_body["amount"]
         card_number = request_body["card_number"]
 
         error, message, access_token, session_data, card_log_id = V2_Methods_Asis.get_payment_session(
-            request, operator, None, card_number, 0)
+            request, operator, None, card_number, amount)
         if error:
             response = {
                 "error": True,
                 "message": message,
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
-
         response = {
             "error": False,
             "message": 'Success',
             "data": {
+                'amount': amount,
                 'card_number': card_number,
                 'card_log_id': card_log_id,
                 'access_token': access_token,
@@ -338,7 +493,7 @@ def card_balance(request):
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes((AllowAny,))
-def card_balance_complete(request):
+def card_pay_complete(request):
     try:
         print(request.headers)
         api_token = request.headers['x-auth']
@@ -359,16 +514,16 @@ def card_balance_complete(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_id=operator.operator_id).all()
+            operators_operator_id=operator).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
                 item.access_permissions_access_permission_name.access_permission_name)
 
-        if 'card-fetch-balance' not in items_access_permissions:
+        if 'card-deduct-balance' not in items_access_permissions:
             response = {
                 "error": True,
-                "message": 'You dont have access to card-fetch-balance. Please contact admin for support.',
+                "message": 'You dont have access to card-deduct-balance. Please contact admin for support.',
             }
             return send_response(response, HTTP_403_FORBIDDEN)
 
@@ -377,6 +532,7 @@ def card_balance_complete(request):
         print(request_body)
         print(request.POST)
 
+        amount = request_body["amount"]
         card_number = request_body["card_number"]
         card_log_id = request_body["card_log_id"]
         access_token = request_body["access_token"]
@@ -389,8 +545,8 @@ def card_balance_complete(request):
         except(TypeError, ValueError, OverflowError, Card_Logs.DoesNotExist):
             return True, 'Card log not found.', None
 
-        error, message, balance = V2_Methods_Asis.get_card_balance(
-            request, operator, None, card_number, 0, card_command, access_token, session_data, card_log, None)
+        error, message, card_content = V2_Methods_Asis.process_payment(
+            request, operator, None, card_number, amount, card_command, access_token, session_data, card_log, None)
         if error:
             response = {
                 "error": True,
@@ -402,10 +558,11 @@ def card_balance_complete(request):
             "error": False,
             "message": 'Success',
             "data": {
+                'amount': amount,
                 'card_number': card_number,
                 'card_log_id': card_log_id,
                 'access_token': access_token,
-                'card_balance': balance,
+                'card_content': card_content,
             }
         }
         return send_response(response, HTTP_200_OK)
