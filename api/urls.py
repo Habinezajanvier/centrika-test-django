@@ -22,7 +22,7 @@ from api.routes import v1
 urlpatterns = [
 ]
 
-# urlpatterns += v1.urlpatterns
+urlpatterns += v1.urlpatterns
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
