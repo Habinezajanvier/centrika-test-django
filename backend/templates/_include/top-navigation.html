@@ -1,0 +1,55 @@
+{% load static %}
+<header id="navbar">
+    <div id="navbar-container" class="boxed">
+        <div class="navbar-header">
+            <a href="{% url 'operators_dashboard' %}" class="navbar-brand">
+                <img src="{% static 'app/logo.png' %}" alt="" class="brand-icon" style="width:40px; height:40px; margin-top:10px; margin-left:10px;">
+                <div class="brand-title">
+                    <span class="brand-text" style="font-size:18px;">
+                        INCITY-APIS
+                    </span>
+                </div>
+            </a>
+        </div>
+        <div class="navbar-content">
+            <ul class="nav navbar-top-links pull-left">
+                <li class="tgl-menu-btn">
+                    <a class="mainnav-toggle" href="#">
+                        <i class="demo-pli-list-view"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-top-links pull-right">
+                <li id="dropdown-user" class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle text-right">
+                        <div class="username hidden-xs">{{ operator.operator_first_name }} {{ operator.operator_last_name }}</div>
+                        <span class="ic-user pull-right">
+                            <i class="fa fa-user"></i>&nbsp;&nbsp;
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right panel-default">
+                        <ul class="head-list">
+                            <li>
+                                <a href="{% url 'operators_profile_view' %}"><i class="demo-pli-male icon-lg icon-fw"></i> Profile</a>
+                            </li>
+                            <li>
+                                <a href="#!">
+                                    <span class="badge badge-danger pull-right">9</span> <i class="demo-pli-mail icon-lg icon-fw"></i> Messages
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'settings_index' %}">
+                                    <span class="label label-success pull-right">New</span><i class="demo-pli-gear icon-lg icon-fw"></i> Settings
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'operators_signout' %}"><i class="demo-pli-unlock icon-lg icon-fw"></i> Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            </ul>
+        </div>
+    </div>
+</header>

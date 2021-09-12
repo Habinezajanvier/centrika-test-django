@@ -1,0 +1,35 @@
+{% extends '_include/base-dashboard.html' %}
+{% block head %}
+    {% load static %}
+    <title>{{ APP_CONSTANT_APP_NAME }} : {{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    {% load static %}{% csrf_token %}
+    <div id="page-head">
+        <div id="page-title">
+            <h1 class="page-header text-overflow">{{ title }}</h1>
+        </div>
+        <ul class="breadcrumb">
+            <li><a href="{% url 'operators_dashboard' %}">Home</a></li>
+            <li class="active">{{ title }}</li>
+        </ul>
+    </div>
+    <div id="page-content" style="padding-top:0px;">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div>
+                            {% if ACCESS_PERMISSION_SETTINGS_VIEW in auth_permissions.values %}
+                                <a href="{% url 'settings_update_database' %}" class="btn btn-danger">
+                                    Update Database
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+{% endblock %}

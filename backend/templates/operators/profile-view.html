@@ -1,0 +1,94 @@
+{% extends '_include/base-general.html' %}
+{% block head %}
+    {% load static %}
+    <title>{{ APP_CONSTANT_APP_NAME }} : {{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    {% load static %}{% csrf_token %}
+    <div id="page-head">
+        <div id="page-title">
+            <h1 class="page-header text-overflow">{{ title }}</h1>
+        </div>
+        <ul class="breadcrumb">
+            <li><a href="{% url 'operators_dashboard' %}">Home</a></li>
+            <li class="active">Profile</li>
+        </ul>
+    </div>
+    <div id="page-content" style="padding-top:0px;">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div>
+                            <a href="{% url 'operators_profile_update' %}" class="btn btn-info">Update</a>
+                            <a href="{% url 'operators_profile_change_password' %}" class="btn btn-warning">Change Password</a>
+                        </div>
+                        <br>
+                        <table class="table table-bordered table-hover" cellspacing="0" width="100%">
+                            <thead>
+                            <tr style="background-color:{{ COLOR_PRIMARY }}">
+                                <th style="width:20%; color:#fff;">Key</th>
+                                <th style="width:80%; color:#fff;">Value</th>
+                            </tr>
+                            <tr>
+                                <td>Operator Id</td>
+                                <td>{{ model.operator_id }}</td>
+                            </tr>
+                            <tr>
+                                <td>Email Id</td>
+                                <td>{{ model.operator_username }}</td>
+                            </tr>
+                            <tr>
+                                <td>Name</td>
+                                <td>{{ model.operator_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Contact Number</td>
+                                <td>{{ model.operator_contact_phone_number }}</td>
+                            </tr>
+                            <tr>
+                                <td>Created At</td>
+                                <td>{{ model.operator_created_at }}</td>
+                            </tr>
+                            <tr>
+                                <td>Created By</td>
+                                <td>{{ model.operator_created_by }}</td>
+                            </tr>
+                            <tr>
+                                <td>Updated At</td>
+                                <td>{{ model.operator_updated_at }}</td>
+                            </tr>
+                            <tr>
+                                <td>Updated By</td>
+                                <td>{{ model.operator_updated_by }}</td>
+                            </tr>
+                            <tr>
+                                <td>Status</td>
+                                <td>
+                                    {% if model.operator_status == model.STATUS_ACTIVE %}
+                                        <div style="width:100px;">{{ model.HTML_TAG_STATUS_ACTIVE_COLOR | safe }}</div>
+                                    {% endif %}
+                                    {% if model.operator_status == model.STATUS_INACTIVE %}
+                                        <div style="width:100px;">{{ model.HTML_TAG_STATUS_INACTIVE_COLOR | safe }}</div>
+                                    {% endif %}
+                                    {% if model.operator_status == model.STATUS_BLOCKED %}
+                                        <div style="width:100px;">{{ model.HTML_TAG_STATUS_BLOCKED_COLOR | safe }}</div>
+                                    {% endif %}
+                                    {% if model.operator_status == model.STATUS_UNVERIFIED %}
+                                        <div style="width:100px;">{{ model.HTML_TAG_STATUS_UNVERIFIED_COLOR | safe }}</div>
+                                    {% endif %}
+                                    {% if model.operator_status == model.STATUS_UNAPPROVED %}
+                                        <div style="width:100px;">{{ model.HTML_TAG_STATUS_UNAPPROVED_COLOR | safe }}</div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include '_include/single_select.html' %}
+{% endblock %}

@@ -1,0 +1,25 @@
+{
+  "version": "1.0.o",
+  "name": "ACG-INCITY-APIS",
+  "launch_path": "/index.php",
+  "description": "ACG-INCITY-APIS developed by AC Group.",
+  "icons": {
+    "128": "static/app/android-icon-144x144.png"
+  },
+  "developer": {
+    "name": "AC Group",
+    "url": "http://acgroup.rw"
+  },
+  "installs_allowed_from": [
+    "*"
+  ],
+  "default_locale": "en",
+  "permissions": {
+  },
+  "locales": {
+    "en": {
+      "name": "ACG-INCITY-APIS",
+      "description": "ACG-INCITY-APIS developed by AC Group."
+    }
+  }
+}

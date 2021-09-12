@@ -1,0 +1,30 @@
+{% extends '_include/base-dashboard.html' %}
+{% block head %}
+    {% load static %}
+    <title>{{ APP_CONSTANT_APP_NAME }} : Dashboard</title>
+{% endblock %}
+
+{% block body %}
+    {% load static %}
+    <div id="page-head">
+        <div id="page-title">
+            <h1 class="page-header text-overflow">{{ title }}</h1>
+        </div>
+        <ul class="breadcrumb">
+            <li><a href="{% url 'operators_dashboard' %}">Home</a></li>
+            <li class="active">Dashboard</li>
+        </ul>
+    </div>
+    <div id="page-content" style="padding-top:0px;">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="row">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
