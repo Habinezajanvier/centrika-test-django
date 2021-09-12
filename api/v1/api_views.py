@@ -111,7 +111,7 @@ def card_topup(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_operator_id=operator.operator_id).all()
+            operator_access_permission_id=operator.operator_id).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
@@ -184,7 +184,7 @@ def card_topup_complete(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_operator_id=operator.operator_id).all()
+            operator_access_permission_id=operator.operator_id).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
@@ -287,7 +287,7 @@ def card_balance(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_operator_id=operator.operator_id).all()
+            operator_access_permission_id=operator.operator_id).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
@@ -359,7 +359,7 @@ def card_balance_complete(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_operator_id=operator.operator_id).all()
+            operator_access_permission_id=operator.operator_id).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
