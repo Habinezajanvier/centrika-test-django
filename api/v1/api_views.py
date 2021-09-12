@@ -54,7 +54,7 @@ def operator_login(request):
             }
             return send_response(response, HTTP_404_NOT_FOUND)
 
-        if model.operator_status != Operators.STATUS_ACTIVE:
+        if model.operator_status != Operators.STATUS_ACTIVE and model.operator_status != Operators.STATUS_INACTIVE:
             response = {
                 "error": True,
                 "message": 'Your account is not active yet. Please contact admin for support.',
