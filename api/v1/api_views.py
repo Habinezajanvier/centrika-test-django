@@ -103,7 +103,7 @@ def card_topup(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        if operator.agent_status != Operators.STATUS_ACTIVE:
+        if operator.operator_status != Operators.STATUS_ACTIVE:
             response = {
                 "error": True,
                 "message": 'Your account is not active yet. Please contact admin for support.',
@@ -176,7 +176,7 @@ def card_topup_complete(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        if operator.agent_status != Operators.STATUS_ACTIVE:
+        if operator.operator_status != Operators.STATUS_ACTIVE:
             response = {
                 "error": True,
                 "message": 'Your account is not active yet. Please contact admin for support.',
@@ -279,7 +279,7 @@ def card_balance(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        if operator.agent_status != Operators.STATUS_ACTIVE:
+        if operator.operator_status != Operators.STATUS_ACTIVE:
             response = {
                 "error": True,
                 "message": 'Your account is not active yet. Please contact admin for support.',
@@ -351,7 +351,7 @@ def card_balance_complete(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        if operator.agent_status != Operators.STATUS_ACTIVE:
+        if operator.operator_status != Operators.STATUS_ACTIVE:
             response = {
                 "error": True,
                 "message": 'Your account is not active yet. Please contact admin for support.',
@@ -398,7 +398,6 @@ def card_balance_complete(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        agent = Agents.objects.get(agent_auth_key=api_token)
         response = {
             "error": False,
             "message": 'Success',
