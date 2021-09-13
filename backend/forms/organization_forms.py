@@ -168,8 +168,6 @@ class OrganizationUpdateForm(forms.ModelForm):
             organization = Organizations.objects.get(organization_name=data)
         except(TypeError, ValueError, OverflowError, Organizations.DoesNotExist):
             organization = None
-        print(str(organization.organization_id))
-        print(str(self.model.organization_id))
         if organization is not None and self.model.organization_id != organization.organization_id:
             raise forms.ValidationError(
                 u'Name: "%s" is already in use.' % data)
