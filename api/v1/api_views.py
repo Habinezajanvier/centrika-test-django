@@ -103,7 +103,7 @@ def card_balance(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        if operator.operator_status != Operators.STATUS_ACTIVE:
+        if operator.operator_status != Operators.STATUS_ACTIVE and operator.operator_status != Operators.STATUS_INACTIVE:
             response = {
                 "error": True,
                 "message": 'Your account is not active yet. Please contact admin for support.',
@@ -175,7 +175,7 @@ def card_balance_complete(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        if operator.operator_status != Operators.STATUS_ACTIVE:
+        if operator.operator_status != Operators.STATUS_ACTIVE and operator.operator_status != Operators.STATUS_INACTIVE:
             response = {
                 "error": True,
                 "message": 'Your account is not active yet. Please contact admin for support.',
@@ -257,7 +257,7 @@ def card_topup(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        if operator.operator_status != Operators.STATUS_ACTIVE:
+        if operator.operator_status != Operators.STATUS_ACTIVE and operator.operator_status != Operators.STATUS_INACTIVE:
             response = {
                 "error": True,
                 "message": 'Your account is not active yet. Please contact admin for support.',
@@ -330,7 +330,7 @@ def card_topup_complete(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        if operator.operator_status != Operators.STATUS_ACTIVE:
+        if operator.operator_status != Operators.STATUS_ACTIVE and operator.operator_status != Operators.STATUS_INACTIVE:
             response = {
                 "error": True,
                 "message": 'Your account is not active yet. Please contact admin for support.',
@@ -433,7 +433,7 @@ def card_pay(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        if operator.operator_status != Operators.STATUS_ACTIVE:
+        if operator.operator_status != Operators.STATUS_ACTIVE and operator.operator_status != Operators.STATUS_INACTIVE:
             response = {
                 "error": True,
                 "message": 'Your account is not active yet. Please contact admin for support.',
@@ -506,7 +506,7 @@ def card_pay_complete(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        if operator.operator_status != Operators.STATUS_ACTIVE:
+        if operator.operator_status != Operators.STATUS_ACTIVE and operator.operator_status != Operators.STATUS_INACTIVE:
             response = {
                 "error": True,
                 "message": 'Your account is not active yet. Please contact admin for support.',
