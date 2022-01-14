@@ -546,7 +546,7 @@ def card_pay_complete(request):
             return True, 'Card log not found.', None
         
         error, message, balance = V2_Methods_Asis.get_card_balance(
-            request, operator, None, card_number, 0, card_command, access_token, session_data, card_log)
+            request, operator, None, card_number, 1, card_command, access_token, session_data, card_log)
         if error:
             response = {
                 "error": True,
