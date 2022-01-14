@@ -1,10 +1,13 @@
+from app.models.card_logs import Card_Logs
+from app import settings
+from app.utils import Utils
+from datetime import datetime, time
 import json
 import uuid
-
 import requests
-from app import settings
-from app.models.card_logs import Card_Logs
-from app.utils import Utils
+
+from app import models
+from django.db import models
 
 
 class V2_Methods_Asis():
@@ -59,7 +62,7 @@ class V2_Methods_Asis():
             return True, 'Error 1: API called failed from ASIS. Response: '+str(e), None
 
     @classmethod
-    def api_start_session(cls, request, operator, device, card_log, access_token, client_session_id, card_number):
+    def api_start_session(cls, request, agent, device, card_log, access_token, client_session_id, card_number):
         try:
             time_in_formatted = Utils.get_convert_datetime_other(
                 Utils.get_current_datetime_utc(), settings.TIME_ZONE, settings.APP_CONSTANT_DISPLAY_TIME_ZONE) + ' GMT+02:00'
@@ -112,7 +115,7 @@ class V2_Methods_Asis():
             return True, 'Error 2: API called failed from ASIS. Response: '+str(e), None
 
     @classmethod
-    def api_pay_purse(cls, request, operator, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command):
+    def api_pay_purse(cls, request, agent, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command):
         try:
             time_in_formatted = Utils.get_convert_datetime_other(
                 Utils.get_current_datetime_utc(), settings.TIME_ZONE, settings.APP_CONSTANT_DISPLAY_TIME_ZONE) + ' GMT+02:00'
@@ -169,7 +172,7 @@ class V2_Methods_Asis():
             return True, 'Error 3: API called failed from ASIS. Response: '+str(e), None
 
     @classmethod
-    def api_get_purse(cls, request, operator, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command, number=1):
+    def api_get_purse(cls, request, agent, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command, number=1):
         try:
             time_in_formatted = Utils.get_convert_datetime_other(
                 Utils.get_current_datetime_utc(), settings.TIME_ZONE, settings.APP_CONSTANT_DISPLAY_TIME_ZONE) + ' GMT+02:00'
@@ -230,7 +233,7 @@ class V2_Methods_Asis():
             return True, 'Error 5: API called failed from ASIS. Response: '+str(e), None
 
     @classmethod
-    def api_end_session(cls, request, operator, device, card_log, access_token, server_session_id, card_number):
+    def api_end_session(cls, request, agent, device, card_log, access_token, server_session_id, card_number):
         try:
             time_in_formatted = Utils.get_convert_datetime_other(
                 Utils.get_current_datetime_utc(), settings.TIME_ZONE, settings.APP_CONSTANT_DISPLAY_TIME_ZONE) + ' GMT+02:00'
@@ -280,7 +283,7 @@ class V2_Methods_Asis():
 
     # start card payment session
     @classmethod
-    def get_payment_session(cls, request, operator, device, card_number, amount):
+    def get_payment_session(cls, request, agent, device, card_number, amount):
         card_log = Card_Logs()
         card_log.card_log_card_number = card_number
         # V2_Methods_Asis.ASIS_DEVICE_SERIAL_NUMBER, device.device_asis_serial_no
@@ -304,9 +307,9 @@ class V2_Methods_Asis():
         card_log.card_log_new_balance = 0
         card_log.card_log_response = ''
         card_log.card_log_created_at = Utils.get_current_datetime_utc()
-        card_log.card_log_created_by = operator.operator_id
+        card_log.card_log_created_by = agent.agent_id
         card_log.card_log_updated_at = Utils.get_current_datetime_utc()
-        card_log.card_log_updated_by = operator.operator_id
+        card_log.card_log_updated_by = agent.agent_id
         card_log.save()
 
         error, message, access_token = V2_Methods_Asis.ap_login_token(
@@ -316,7 +319,7 @@ class V2_Methods_Asis():
 
         client_session_id = str(uuid.uuid1())
         error, message, session_data = V2_Methods_Asis.api_start_session(
-            request, operator, device, card_log, access_token, client_session_id, card_number)
+            request, agent, device, card_log, access_token, client_session_id, card_number)
         if error:
             return error, message, None, None, None
         # server_session_id = data['header']['serverSessionId']
@@ -324,19 +327,18 @@ class V2_Methods_Asis():
 
     # process card payment main balance from ASIS
     @classmethod
-    def process_payment(cls, request, operator, device, card_number, amount, card_command, access_token, session_data, card_log, transaction):
+    def process_payment(cls, request, agent, device, card_number, amount, card_command, access_token, session_data, card_log):
         client_session_id = session_data['header']['clientSessionId']
         server_session_id = session_data['header']['serverSessionId']
 
-        errorGet, messageGet, get_response_content = V2_Methods_Asis.api_get_purse(
-            request, operator, device, card_log, access_token, client_session_id, server_session_id, card_number, 0, card_command, number=1)
-        if errorGet:
-            return errorGet, messageGet, None
-
+        # errorGet, messageGet, _ = V2_Methods_Asis.api_get_purse(
+        #     request, agent, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command, number=1)
+        # if errorGet:
+        #     return errorGet, messageGet, None
         errorPay, messagePay, response_content = V2_Methods_Asis.api_pay_purse(
-            request, operator, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command)
-        error, message, details = V2_Methods_Asis.api_end_session(
-            request, operator, device, card_log, access_token, server_session_id, card_number)
+            request, agent, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command)
+        error, message, _ = V2_Methods_Asis.api_end_session(
+            request, agent, device, card_log, access_token, server_session_id, card_number)
 
         # update card log
         if errorPay:
@@ -360,13 +362,13 @@ class V2_Methods_Asis():
         return False, 'Success', response_content
 
     @classmethod
-    def card_topup(cls, request, operator, card_number, amount):
+    def card_topup(cls, request, agent, card_number, amount):
         try:
             url = 'https://mobile-test.tapandgoticketing.co.rw/api/card/topup'
             payload = {
                 'card_number': card_number,
                 'pos_number': "00000000000000",
-                'username': operator.operator_username,
+                'agent_username': agent.agent_username,
                 'amount': amount,
             }
             payload = json.dumps(payload)
@@ -390,25 +392,31 @@ class V2_Methods_Asis():
             return False, 'Success', data
         except Exception as e:
             return True, 'Error 6: API called failed from Mobile Test. Response: '+str(e), None
-
+    
     @classmethod
-    def get_card_balance(cls, request, operator, device, card_number, amount, card_command, access_token, session_data, card_log, transaction):
+    def get_card_balance(cls, request, agent, device, card_number, amount, card_command, access_token, session_data, card_log):
         client_session_id = session_data['header']['clientSessionId']
         server_session_id = session_data['header']['serverSessionId']
         errorGet, messageGet, get_response_content = V2_Methods_Asis.api_get_purse(
-            request, operator, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command, number=1)
+            request, agent, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command, number=1)
         if errorGet:
             return errorGet, messageGet, None
         balance = get_response_content['balance']
+        
+        card_log.card_log_response = messageGet
+        card_log.card_log_amount = 0
+        card_log.card_log_old_balance = 0
+        card_log.card_log_new_balance = balance
+        card_log.save()
         return False, 'Success', balance
 
     @classmethod
-    def validate_card_topup(cls, request, operator, device, card_number, amount, card_command, access_token, session_data, card_log, transaction):
+    def validate_card_topup(cls, request, agent, device, card_number, amount, card_command, access_token, session_data, card_log, transaction):
         client_session_id = session_data['header']['clientSessionId']
         server_session_id = session_data['header']['serverSessionId']
 
         errorGet, messageGet, get_response_content = V2_Methods_Asis.api_get_purse(
-            request, operator, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command, number=1)
+            request, agent, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command, number=1)
         if errorGet:
             return errorGet, messageGet, None
 
@@ -419,20 +427,20 @@ class V2_Methods_Asis():
         return False, 'Success', get_response_content
 
     @classmethod
-    def process_card_topup(cls, request, operator, device, card_number, amount, card_command, access_token, session_data, card_log, transaction):
+    def process_card_topup(cls, request, agent, device, card_number, amount, card_command, access_token, session_data, card_log, get_response_content):
         client_session_id = session_data['header']['clientSessionId']
         server_session_id = session_data['header']['serverSessionId']
 
-        errorGet, messageGet, get_response_content = V2_Methods_Asis.api_get_purse(
-            request, operator, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command, number=2)
-        if errorGet:
-            return errorGet, messageGet, None
+        # errorGet, messageGet, get_response_content = V2_Methods_Asis.api_get_purse(
+        #     request, agent, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command, number=2)
+        # if errorGet:
+        #     return errorGet, messageGet, None
 
         errorPay, messagePay, response_content = V2_Methods_Asis.api_pay_purse(
-            request, operator, device, card_log, access_token, client_session_id, server_session_id, card_number, 0, card_command)
+            request, agent, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command)
 
-        error, message, details = V2_Methods_Asis.api_end_session(
-            request, operator, device, card_log, access_token, server_session_id, card_number)
+        error, message, _ = V2_Methods_Asis.api_end_session(
+            request, agent, device, card_log, access_token, server_session_id, card_number)
 
         # update card log
         if errorPay:

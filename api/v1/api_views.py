@@ -544,9 +544,25 @@ def card_pay_complete(request):
                 pk=card_log_id)
         except(TypeError, ValueError, OverflowError, Card_Logs.DoesNotExist):
             return True, 'Card log not found.', None
+        
+        error, message, balance = V2_Methods_Asis.get_card_balance(
+            request, operator, None, card_number, 0, card_command, access_token, session_data, card_log)
+        if error:
+            response = {
+                "error": True,
+                "message": message,
+            }
+            return send_response(response, HTTP_400_BAD_REQUEST)
+        
+        if balance < amount:
+            response = {
+                "error": True,
+                "message": "Insufficient balance in card.",
+            }
+            return send_response(response, HTTP_400_BAD_REQUEST)
 
         error, message, card_content = V2_Methods_Asis.process_payment(
-            request, operator, None, card_number, amount, card_command, access_token, session_data, card_log, None)
+            request, operator, None, card_number, amount, card_command, access_token, session_data, card_log)
         if error:
             response = {
                 "error": True,
