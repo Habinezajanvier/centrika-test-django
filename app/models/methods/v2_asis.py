@@ -329,7 +329,7 @@ class V2_Methods_Asis():
         server_session_id = session_data['header']['serverSessionId']
 
         errorGet, messageGet, get_response_content = V2_Methods_Asis.api_get_purse(
-            request, operator, device, card_log, access_token, client_session_id, server_session_id, card_number, amount, card_command, number=1)
+            request, operator, device, card_log, access_token, client_session_id, server_session_id, card_number, 0, card_command, number=1)
         if errorGet:
             return errorGet, messageGet, None
 
