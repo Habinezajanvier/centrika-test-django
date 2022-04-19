@@ -160,7 +160,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'db_tap_and_go_ticketing',
+            'NAME': 'db_tap_and_go_ticketing_v6_aws',
             'USER': 'root',
             'PASSWORD': 'root',
             'HOST': 'localhost',
