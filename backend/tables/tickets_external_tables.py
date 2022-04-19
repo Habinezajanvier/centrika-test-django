@@ -103,13 +103,13 @@ class TicketsExternalTable(tables.Table):
         }
     )
     ticket_requested_at = tables.Column(
-        verbose_name='Requested At',
+        verbose_name='RequestedAt',
         attrs={
             'search_filter': 'input-date',
         }
     )
     ticket_confirmed_at = tables.Column(
-        verbose_name='Confirmed At',
+        verbose_name='ConfirmedAt',
         attrs={
             'search_filter': 'input-date',
         }

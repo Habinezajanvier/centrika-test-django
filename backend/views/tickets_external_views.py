@@ -66,7 +66,7 @@ class AjaxTicketsExternalList(View):
         search = datatables.get('search[value]')
 
         # Get objects
-        objects = Card_Logs.objects
+        objects = Tickets_External.objects
 
         # Set record total
         records_total = objects.all().count()

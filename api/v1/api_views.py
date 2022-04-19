@@ -1,6 +1,8 @@
 import json
+import bcrypt
 
 from app import settings
+from app.jwt import Jwt
 from app.models.card_logs import Card_Logs
 from app.models.methods.v2_asis import V2_Methods_Asis
 from app.models.operator_access_permissions import Operator_Access_Permissions
@@ -63,25 +65,32 @@ def operator_login(request):
                 "message": 'Your account is not active yet. Please contact admin for support.',
             }
             return send_response(response, HTTP_403_FORBIDDEN)
-
-        if not check_password(password, model.operator_password_hash):
+        
+        if bcrypt.checkpw(bytes(password, 'utf-8'), bytes(model.operator_password, 'utf-8')):
+            name = str(model.operator_first_name) +' '+str(model.operator_last_name)
+            access_token, expires_at = Jwt.generate_access_token(model.operator_id, { 'name': name })
+            refresh_token = Jwt.generate_refresh_token(model.operator_id, { 'name': name })
             response = {
+                "error": False,
+                "message": 'Success',
+                "data": {
+                    'id': model.operator_id,
+                    'username': model.operator_username,
+                    'name': name,
+                    'expires_at': expires_at,
+                    'access_token': access_token,
+                }
+            }
+            res = Response(response, status=HTTP_200_OK, content_type="application/json")
+            res.set_cookie(key='access_token', value=access_token, httponly=True)
+            res.set_cookie(key='refresh_token', value=refresh_token, httponly=True)
+            return res
+        
+        response = {
                 "error": True,
                 "message": 'Incorrect username or password.',
             }
-            return send_response(response, HTTP_404_NOT_FOUND)
-
-        response = {
-            "error": False,
-            "message": 'Success',
-            "data": {
-                'id': model.operator_id,
-                'name': str(model.operator_first_name) + ' '+ str(model.operator_last_name),
-                'token': model.operator_auth_key,
-                'username': model.operator_username,
-            }
-        }
-        return send_response(response, HTTP_200_OK)
+        return send_response(response, HTTP_403_FORBIDDEN)
     except Exception as e:
         response = {
             "error": True,
@@ -425,10 +434,17 @@ def card_topup_complete(request):
 @permission_classes((AllowAny,))
 def card_pay(request):
     try:
-        print(request.headers)
-        api_token = request.headers['x-auth']
+        payload = Jwt.authenticate(request)
+        print(payload)
+        if payload is None:
+            response = {
+                "error": True,
+                "message": 'Invalid token.',
+            }
+            return send_response(response, HTTP_403_FORBIDDEN)
+        operator = None
         try:
-            operator = Operators.objects.get(operator_auth_key=api_token)
+            operator = Operators.objects.get(operator_id=payload['id'])
         except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
             response = {
                 "error": True,
@@ -529,10 +545,17 @@ def card_pay(request):
 @permission_classes((AllowAny,))
 def card_pay_complete(request):
     try:
-        print(request.headers)
-        api_token = request.headers['x-auth']
+        payload = Jwt.authenticate(request)
+        print(payload)
+        if payload is None:
+            response = {
+                "error": True,
+                "message": 'Invalid token.',
+            }
+            return send_response(response, HTTP_403_FORBIDDEN)
+        operator = None
         try:
-            operator = Operators.objects.get(operator_auth_key=api_token)
+            operator = Operators.objects.get(operator_id=payload['id'])
         except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
             response = {
                 "error": True,
