@@ -73,7 +73,7 @@ def operator_login(request):
             "message": 'Success',
             "data": {
                 'id': model.operator_id,
-                'name': model.operator_name,
+                'name': str(model.operator_first_name) + ' '+ str(model.operator_last_name),
                 'token': model.operator_auth_key,
                 'username': model.operator_username,
             }

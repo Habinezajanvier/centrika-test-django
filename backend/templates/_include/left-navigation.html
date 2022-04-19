@@ -78,19 +78,55 @@
                             {% endif %}
                         {% endif %}
 
-                        {% if ACCESS_PERMISSION_LOG_VIEW in auth_permissions.values %}
+                        {% if ACCESS_PERMISSION_TICKETS_VIEW in auth_permissions.values %}
                             {% if section == BACKEND_SECTION_LOGS %}
                                 <li class="active-link">
                                     <a href="{% url 'card_logs_index' %}">
                                         <i class="fa fa-history"></i>
-                                        <span class="menu-title"><b>{{ MODEL_CARDS_LOGS_PLURAL_TITLE }}</b> </span>
+                                        <span class="menu-title"><b>{{ MODEL_TICKETS_PLURAL_TITLE }}</b> </span>
                                     </a>
                                 </li>
                             {% else %}
                                 <li>
                                     <a href="{% url 'card_logs_index' %}">
                                         <i class="fa fa-history"></i>
-                                        <span class="menu-title"><b>{{ MODEL_CARDS_LOGS_PLURAL_TITLE }}</b> </span>
+                                        <span class="menu-title"><b>{{ MODEL_TICKETS_PLURAL_TITLE }}</b> </span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if ACCESS_PERMISSION_ORGANIZATIONS_VIEW in auth_permissions.values %}
+                            {% if section == BACKEND_SECTION_LOGS %}
+                                <li class="active-link">
+                                    <a href="{% url 'organizations_index' %}">
+                                        <i class="fa fa-history"></i>
+                                        <span class="menu-title"><b>{{ MODEL_ORGANIZATIONS_PLURAL_TITLE }}</b> </span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="{% url 'organizations_index' %}">
+                                        <i class="fa fa-history"></i>
+                                        <span class="menu-title"><b>{{ MODEL_ORGANIZATIONS_PLURAL_TITLE }}</b> </span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if ACCESS_PERMISSION_OPERATOR_VIEW in auth_permissions.values %}
+                            {% if section == BACKEND_SECTION_LOGS %}
+                                <li class="active-link">
+                                    <a href="{% url 'operators_index' %}">
+                                        <i class="fa fa-history"></i>
+                                        <span class="menu-title"><b>{{ MODEL_OPERATORS_PLURAL_TITLE }}</b> </span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="{% url 'operators_index' %}">
+                                        <i class="fa fa-history"></i>
+                                        <span class="menu-title"><b>{{ MODEL_OPERATORS_PLURAL_TITLE }}</b> </span>
                                     </a>
                                 </li>
                             {% endif %}

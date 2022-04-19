@@ -5,8 +5,7 @@ from django.utils.safestring import mark_safe
 from django.db import models
 from app import settings
 from app.utils import Utils
-from operators import Operators
-
+from app.models.operators import Operators
 
 class Methods_Card_Logs():
     @classmethod

@@ -138,6 +138,7 @@ class Migration(migrations.Migration):
                 ('operator_profile_photo', models.CharField(blank=True, max_length=255, verbose_name='Profile photo file path')),
                 ('operator_signature', models.CharField(blank=True, max_length=255, verbose_name='Signature')),
                 ('operator_buses', models.CharField(blank=True, max_length=255, verbose_name='Operator Buses')),
+                ('operator_organization', models.CharField(default='0', max_length=255, verbose_name='Organization')),
                 ('operator_ip_address', models.CharField(blank=True, max_length=100, verbose_name='IP Address')),
                 ('operator_created_at', models.IntegerField(default=0, verbose_name='Created At')),
                 ('operator_created_by', models.IntegerField(default=0, verbose_name='Created By')),

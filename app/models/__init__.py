@@ -9,4 +9,5 @@ from app.models.cards import *
 from app.models.card_balance import *
 from app.models.card_logs import *
 from app.models.tickets_external import *
+from app.models.organizations import *
 

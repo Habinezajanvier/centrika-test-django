@@ -116,6 +116,8 @@ class Operators(models.Model):
         'Signature', max_length=255, blank=True)
     operator_buses = models.CharField(
         'Operator Buses', max_length=255, blank=True)
+    operator_organization = models.CharField(
+        'Organization', max_length=255, blank=False, default='0')
     operator_ip_address = models.CharField(
         'IP Address', max_length=100, blank=True)
     operator_created_at = models.IntegerField(
