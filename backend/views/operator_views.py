@@ -69,27 +69,23 @@ def signin(request):
                     messages.error(
                         request, 'Your account is blocked. Please contact admin for support.')
                     return render(request, template_url, {'form': form, 'display_captcha': display_captcha})
-                elif check_password(form.cleaned_data['password'], model.operator_password_hash):
-                    Methods_Operators.update_status(
-                        request, operator, model, Operators.STATUS_ACTIVE)
+                else:
+                    if not bcrypt.checkpw(bytes(form.cleaned_data['password'], 'utf-8'), bytes(model.operator_password, 'utf-8')):
+                        Methods_Failed_Login.add(form.cleaned_data['email'], form.cleaned_data['password'],
+                                         Failed_Login.FAILED_LOGIN_FROM_BACKEND,
+                                         Utils.get_ip_address(request), False)
+                        messages.error(
+                            request, 'Incorrect email address or password.')
+                        return render(request, template_url, {'form': form, 'display_captcha': display_captcha})
+                    
+                    Methods_Operators.update_status(request, operator, model, Operators.STATUS_ACTIVE)
                     Operators.login(request, model)
-                    Failed_Login.objects.filter(failed_login_from=Failed_Login.FAILED_LOGIN_FROM_BACKEND,
-                                                failed_login_ip_address=Utils.get_ip_address(
-                                                    request),
-                                                failed_login_status=False).update(failed_login_status=True)
-                    redirect_field_name = Operators.get_redirect_field_name(
-                        request)
+                    Failed_Login.objects.filter(failed_login_from=Failed_Login.FAILED_LOGIN_FROM_BACKEND, failed_login_ip_address=Utils.get_ip_address(request),failed_login_status=False).update(failed_login_status=True)
+                    redirect_field_name = Operators.get_redirect_field_name(request)
                     if redirect_field_name is None:
                         return redirect(reverse("operators_dashboard"))
                     else:
                         return redirect(redirect_field_name)
-                else:
-                    Methods_Failed_Login.add(form.cleaned_data['email'], form.cleaned_data['password'],
-                                             Failed_Login.FAILED_LOGIN_FROM_BACKEND,
-                                             Utils.get_ip_address(request), False)
-                    messages.error(
-                        request, 'Incorrect email address or password.')
-                    return render(request, template_url, {'form': form, 'display_captcha': display_captcha})
         else:
             messages.error(request, form.errors.as_data())
             return render(request, template_url, {'form': form, 'display_captcha': display_captcha})
