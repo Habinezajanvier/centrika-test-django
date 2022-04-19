@@ -1,8 +1,8 @@
 {
   "version": "1.0.o",
-  "name": "ACG-INCITY-APIS",
+  "name": "ACG-CENTRIKA",
   "launch_path": "/index.php",
-  "description": "ACG-INCITY-APIS developed by AC Group.",
+  "description": "ACG-CENTRIKA developed by AC Group.",
   "icons": {
     "128": "static/app/android-icon-144x144.png"
   },
@@ -18,8 +18,8 @@
   },
   "locales": {
     "en": {
-      "name": "ACG-INCITY-APIS",
-      "description": "ACG-INCITY-APIS developed by AC Group."
+      "name": "ACG-CENTRIKA",
+      "description": "ACG-CENTRIKA developed by AC Group."
     }
   }
 }
