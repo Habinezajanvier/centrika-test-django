@@ -1,33 +1,18 @@
 import json
 
 from app import settings
-from app.data import ARRAY_KIGALI_AREAS, ARRAY_RWANDA_DISTRICTS
-from app.models.access_permissions import Access_Permissions
 from app.models.failed_login import Failed_Login
-from app.models.methods.access_permissions import Methods_Access_Permissions
 from app.models.methods.emails import Methods_Emails
 from app.models.methods.failed_login import Methods_Failed_Login
-from app.models.methods.operator_access_permissions import \
-    Methods_Operator_Access_Permissions
 from app.models.methods.operators import Methods_Operators
-from app.models.operator_access_permissions import Operator_Access_Permissions
 from app.models.operators import Operators
 from app.utils import Utils
 from backend.forms.operator_forms import (OperatorChangePasswordForm,
-                                          OperatorCreateForm,
-                                          OperatorForgotPasswordForm,
                                           OperatorProfileUpdateForm,
-                                          OperatorResetPasswordForm,
-                                          OperatorSearchIndexForm,
                                           OperatorSignInCaptchaForm,
-                                          OperatorSignInForm,
-                                          OperatorUpdateForm, OperatorViewForm)
-from backend.tables.operator_tables import OperatorsTable
+                                          OperatorSignInForm)
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password, make_password
-from django.core import serializers
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
 from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden, HttpResponseNotFound)
