@@ -16,6 +16,9 @@ from rest_framework.status import (HTTP_200_OK, HTTP_400_BAD_REQUEST,
                                    HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND,
                                    HTTP_500_INTERNAL_SERVER_ERROR)
 
+from app.models.tickets_external import Tickets_External
+from app.utils import Utils
+
 
 def send_response(response, status):
     return Response(response, status=HTTP_200_OK, content_type="application/json")
@@ -447,10 +450,10 @@ def card_pay(request):
             items_access_permissions.append(
                 item.operator_access_permission_name)
 
-        if 'card-deduct-balance' not in items_access_permissions:
+        if 'tickets-create' not in items_access_permissions:
             response = {
                 "error": True,
-                "message": 'You dont have access to card-deduct-balance. Please contact admin for support.',
+                "message": 'You dont have access to tickets-create. Please contact admin for support.',
             }
             return send_response(response, HTTP_403_FORBIDDEN)
 
@@ -459,24 +462,55 @@ def card_pay(request):
         print(request_body)
         print(request.POST)
 
-        amount = request_body["amount"]
-        card_number = request_body["card_number"]
+        ticket = Tickets_External()
+        ticket.ticket_external = 'centrika'
+        ticket.ticket_reference = request_body["ticket_id"]
+        ticket.ticket_company_name = request_body["company"]
+        ticket.ticket_company_branch_name = request_body["branch"]
+        ticket.ticket_agent_name = request_body["agent"]
+        ticket.ticket_route_name = request_body["bus_route"]
+        ticket.ticket_bus_plate_number = request_body["bus_plate_number"]
+        ticket.ticket_schedule_id = request_body["trip_id"]
+        ticket.ticket_start_bus_stop_name = request_body["start_stop"]
+        ticket.ticket_end_bus_stop_name = request_body["end_stop"]
+        ticket.ticket_destination_name = str(ticket.ticket_start_bus_stop_name)+'-'+str(ticket.ticket_end_bus_stop_name)
+        ticket.ticket_customer_name = request_body["customer_name"]
+        ticket.ticket_customer_phone_number = request_body["customer_phone"]
+        ticket.ticket_pos_serial_number = request_body["pos"]
+        ticket.ticket_travel_date = request_body["travel_date"]
+        ticket.ticket_travel_time = request_body["travel_time"]
+        ticket.ticket_travel_datetime = str(ticket.ticket_travel_date) +' '+str(ticket.ticket_travel_time)
+        ticket.ticket_price = request_body["amount"]
+        ticket.ticket_payment_type = 'card'
+        ticket.ticket_payment_provider = 'none'
+        ticket.ticket_card_number = request_body["card_number"]
+        ticket.ticket_card_response = ''
+        ticket.ticket_card_transaction_id = ''
+        ticket.ticket_card_transaction_status = ''
+        ticket.ticket_card_company_name = 'acgroup'
+        ticket.ticket_card_old_balance = 0
+        ticket.ticket_card_new_balance = 0
+        ticket.ticket_seat_no = request_body["seat_no"]
+        ticket.ticket_requested_at = Utils.get_current_datetime_utc()
+        ticket.ticket_confirmed_at = 0
+        ticket.save()
 
         error, message, access_token, session_data, card_log_id = V2_Methods_Asis.get_payment_session(
-            request, operator, None, card_number, amount)
+            request, operator, None, ticket.ticket_card_number, ticket.ticket_price)
         if error:
             response = {
                 "error": True,
                 "message": message,
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
+        
+        ticket.ticket_card_transaction_id = card_log_id
+        ticket.save()
         response = {
             "error": False,
             "message": 'Success',
             "data": {
-                'amount': amount,
-                'card_number': card_number,
-                'card_log_id': card_log_id,
+                'transaction_id': ticket.ticket_id,
                 'access_token': access_token,
                 'session_data': session_data,
             }
@@ -520,10 +554,10 @@ def card_pay_complete(request):
             items_access_permissions.append(
                 item.operator_access_permission_name)
 
-        if 'card-deduct-balance' not in items_access_permissions:
+        if 'tickets-update' not in items_access_permissions:
             response = {
                 "error": True,
-                "message": 'You dont have access to card-deduct-balance. Please contact admin for support.',
+                "message": 'You dont have access to tickets-update. Please contact admin for support.',
             }
             return send_response(response, HTTP_403_FORBIDDEN)
 
@@ -532,21 +566,25 @@ def card_pay_complete(request):
         print(request_body)
         print(request.POST)
 
-        amount = request_body["amount"]
-        card_number = request_body["card_number"]
-        card_log_id = request_body["card_log_id"]
+        ticket_id = request_body["transaction_id"]
         access_token = request_body["access_token"]
         session_data = request_body["session_data"]
         card_command = request_body["card_command"]
 
         try:
+            ticket = Tickets_External.objects.get(
+                pk=ticket_id)
+        except(TypeError, ValueError, OverflowError, Tickets_External.DoesNotExist):
+            return True, 'Ticket not found.', None
+
+        try:
             card_log = Card_Logs.objects.get(
-                pk=card_log_id)
+                pk=ticket.ticket_card_transaction_id)
         except(TypeError, ValueError, OverflowError, Card_Logs.DoesNotExist):
             return True, 'Card log not found.', None
         
         error, message, balance = V2_Methods_Asis.get_card_balance(
-            request, operator, None, card_number, 1, card_command, access_token, session_data, card_log)
+            request, operator, None, ticket.ticket_card_number, 1, card_command, access_token, session_data, card_log)
         if error:
             response = {
                 "error": True,
@@ -554,7 +592,7 @@ def card_pay_complete(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
         
-        if balance < amount:
+        if balance < ticket.ticket_price:
             response = {
                 "error": True,
                 "message": "Insufficient balance in card.",
@@ -562,7 +600,7 @@ def card_pay_complete(request):
             return send_response(response, HTTP_400_BAD_REQUEST)
 
         error, message, card_content = V2_Methods_Asis.process_payment(
-            request, operator, None, card_number, 200, card_command, access_token, session_data, card_log)
+            request, operator, None, ticket.ticket_card_number, 200, card_command, access_token, session_data, card_log)
         if error:
             response = {
                 "error": True,
@@ -574,9 +612,7 @@ def card_pay_complete(request):
             "error": False,
             "message": 'Success',
             "data": {
-                'amount': amount,
-                'card_number': card_number,
-                'card_log_id': card_log_id,
+                'transaction_id': ticket.ticket_id,
                 'access_token': access_token,
                 'card_content': card_content,
             }
