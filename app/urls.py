@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import url, include
+from django.urls import re_path, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
@@ -24,14 +24,14 @@ from backend.views import operator_views
 
 urlpatterns = [
     # url(r'', include('shrink.urls')),
-    url(r'^tinymce/', include('tinymce.urls')),
+    re_path(r'^tinymce/', include('tinymce.urls')),
     path('admin/', admin.site.urls),
 
     path('', include('backend.urls')),
 
     path('backend/', include('backend.urls')),
-    url(r'^backend/$', operator_views.signin, name='signin'),
-    url(r'^service-worker.js',
+    re_path(r'^backend/$', operator_views.signin, name='signin'),
+    re_path(r'^service-worker.js',
         (TemplateView.as_view(template_name="service-worker/service-worker.js",
                               content_type='application/javascript', )),
         name='service-worker.js'),

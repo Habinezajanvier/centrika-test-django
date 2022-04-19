@@ -27,7 +27,7 @@ APP_DIR = 'acgroup-centrika'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-IS_LOCAL = False
+IS_LOCAL = True
 
 if IS_LOCAL:
     ALLOWED_HOSTS = ['*']
@@ -129,7 +129,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'app.wsgi.application'
 
 APP_DOMAIN_LOCAL = 'http://127.0.0.1:8000'
-APP_DOMAIN_PROD = 'https://card-test.tapandgoticketing.co.rw'
+APP_DOMAIN_PROD = 'http://127.0.0.1:8000'
 LOGO_URL_LOCAL = APP_DOMAIN_LOCAL
 LOGO_URL_PROD = APP_DOMAIN_PROD
 BACKEND_DOMAIN_LOCAL = APP_DOMAIN_LOCAL+'/backend'
@@ -146,9 +146,9 @@ if IS_LOCAL:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'db_tap_and_go_ticketing',
+            'NAME': 'acg_upcountry_external',
             'USER': 'root',
-            'PASSWORD': 'root',
+            'PASSWORD': 'Kigali@12345',
             'HOST': 'localhost',
             'PORT': '3306',
             'OPTIONS': {
@@ -160,9 +160,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'db_tap_and_go_ticketing_v6_aws',
-            'USER': 'tapandgo',
-            'PASSWORD': '5Pn2GM=ddaFjRQW5',
+            'NAME': 'acg_upcountry_external',
+            'USER': 'root',
+            'PASSWORD': 'root',
             'HOST': 'localhost',
             'PORT': '3306',
             'OPTIONS': {
@@ -353,7 +353,9 @@ BACKEND_SECTION_PROFILE = 3
 BACKEND_SECTION_CHANGE_PASSWORD = 4
 BACKEND_SECTION_SETTINGS = 5
 BACKEND_SECTION_HELP = 6
+BACKEND_SECTION_ORGANIZATIONS = 7
 BACKEND_SECTION_LOGS = 8
+BACKEND_SECTION_TICKETS = 9
 
 # Access Permissions
 ACCESS_PERMISSION_OPERATOR_CREATE = 'operator-create'
@@ -362,32 +364,32 @@ ACCESS_PERMISSION_OPERATOR_DELETE = 'operator-delete'
 ACCESS_PERMISSION_OPERATOR_VIEW = 'operator-view'
 ACCESS_PERMISSION_DASHBOARD_VIEW = 'dashboard-view'
 ACCESS_PERMISSION_SETTINGS_VIEW = 'settings-view'
-ACCESS_PERMISSION_LOG_CREATE = 'centrika-create'
-ACCESS_PERMISSION_LOG_UPDATE = 'centrika-update'
-ACCESS_PERMISSION_LOG_DELETE = 'centrika-delete'
-ACCESS_PERMISSION_LOG_VIEW = 'centrika-view'
+ACCESS_PERMISSION_LOG_CREATE = 'log-create'
+ACCESS_PERMISSION_LOG_UPDATE = 'log-update'
+ACCESS_PERMISSION_LOG_DELETE = 'log-delete'
+ACCESS_PERMISSION_LOG_VIEW = 'log-view'
+ACCESS_PERMISSION_ORGANIZATIONS_CREATE = 'organizations-create'
+ACCESS_PERMISSION_ORGANIZATIONS_UPDATE = 'organizations-update'
+ACCESS_PERMISSION_ORGANIZATIONS_DELETE = 'organizations-delete'
+ACCESS_PERMISSION_ORGANIZATIONS_VIEW = 'organizations-view'
+ACCESS_PERMISSION_TICKETS_CREATE = 'tickets-create'
+ACCESS_PERMISSION_TICKETS_UPDATE = 'tickets-update'
+ACCESS_PERMISSION_TICKETS_DELETE = 'tickets-delete'
+ACCESS_PERMISSION_TICKETS_VIEW = 'tickets-view'
 
 # Model Titles
 MODEL_OPERATORS_PLURAL_TITLE = 'Operators'
 MODEL_OPERATORS_SINGULAR_TITLE = 'Operator'
-MODEL_COMPANIES_PLURAL_TITLE = 'Companies'
-MODEL_COMPANIES_SINGULAR_TITLE = 'Company'
-MODEL_AGENTS_PLURAL_TITLE = 'Agents'
-MODEL_AGENTS_SINGULAR_TITLE = 'Agent'
-MODEL_AGENT_FLOATS_CARDS_PLURAL_TITLE = 'Floats Cards'
-MODEL_AGENT_FLOATS_CARDS_SINGULAR_TITLE = 'Floats Card'
-MODEL_AGENT_FLOATS_TICKETS_PLURAL_TITLE = 'Floats Tickets'
-MODEL_AGENT_FLOATS_TICKETS_SINGULAR_TITLE = 'Floats Ticket'
+MODEL_ORGANIZATIONS_PLURAL_TITLE = 'Organizations'
+MODEL_ORGANIZATIONS_SINGULAR_TITLE = 'Organization'
 MODEL_CARDS_PLURAL_TITLE = 'Cards'
 MODEL_CARDS_SINGULAR_TITLE = 'Card'
 MODEL_CARD_BALANCE_PLURAL_TITLE = 'Card Balance'
 MODEL_CARD_BALANCE_SINGULAR_TITLE = 'Card Balance'
 MODEL_CARDS_LOGS_PLURAL_TITLE = 'Card Logs'
 MODEL_CARDS_LOGS_SINGULAR_TITLE = 'Card Log'
-MODEL_REPORTS_PLURAL_TITLE = 'Floats Reports'
-MODEL_REPORTS_SINGULAR_TITLE = 'Floats Report'
-MODEL_POS_PLURAL_TITLE = 'Pos'
-MODEL_POS_SINGULAR_TITLE = 'Pos'
+MODEL_TICKETS_PLURAL_TITLE = 'Tickets'
+MODEL_TICKETS_SINGULAR_TITLE = 'Ticket'
 
 # Status Colors
 STATUS_ACTIVE_COLOR = '#2ECC71'

@@ -2,10 +2,10 @@
 
 from django.urls.base import reverse
 from django.utils.safestring import mark_safe
-from app.models.agents import Agents
 from django.db import models
 from app import settings
 from app.utils import Utils
+from operators import Operators
 
 
 class Methods_Card_Logs():
@@ -19,17 +19,17 @@ class Methods_Card_Logs():
                                                                settings.APP_CONSTANT_DISPLAY_TIME_ZONE) + ' ' + settings.APP_CONSTANT_DISPLAY_TIME_ZONE_INFO
 
         try:
-            agent = Agents.objects.get(
+            operator = Operators.objects.get(
                 pk=model.card_log_created_by)
-            model.card_log_created_by = str(agent.agent_name)
-        except(TypeError, ValueError, OverflowError, Agents.DoesNotExist):
+            model.card_log_created_by = str(operator.operator_first_name) + ' ' +str(operator.operator_last_name)
+        except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
             print('')
 
         try:
-            agent = Agents.objects.get(
+            operator = Operators.objects.get(
                 pk=model.card_log_updated_by)
-            model.card_log_updated_by = str(agent.agent_name)
-        except(TypeError, ValueError, OverflowError, Agents.DoesNotExist):
+            model.card_log_updated_by = str(operator.operator_first_name) + ' ' +str(operator.operator_last_name)
+        except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
             print('')
 
         return model
