@@ -66,7 +66,7 @@ class Methods_Organizations:
             model = Organizations()
 
         if 'name' in data:
-            model.organization_name = data['name']
+            model.organization_name = str(data['name']).lower()
         else:
             model.organization_name = ''
         if 'email' in data:
@@ -92,7 +92,7 @@ class Methods_Organizations:
         data = json.loads(data)
 
         if 'name' in data:
-            model.organization_name = data['name']
+            model.organization_name = str(data['name']).lower()
         if 'email' in data:
             model.organization_email_id = data['email']
         if 'phone_number' in data:

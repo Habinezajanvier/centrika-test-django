@@ -138,7 +138,7 @@ class Operators(models.Model):
         return self.operator_id
 
     def get_session_auth_hash(self):
-        key_salt = "acgroup-fms.models.auth.Operators.get_session_auth_hash"
+        key_salt = "acgroup-centrika.models.auth.Operators.get_session_auth_hash"
         return salted_hmac(key_salt, self.operator_password).hexdigest()
 
     @classmethod

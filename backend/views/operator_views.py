@@ -289,9 +289,6 @@ class AjaxOperatorsList(View):
 
         # Get objects
         objects = Operators.objects
-        if operator.operator_organization != 0:
-            objects.filter(
-                Q(operator_organization=operator.operator_organization))
 
         # Set record total
         records_total = objects.all().count()
@@ -505,8 +502,6 @@ def select_single(request):
         return HttpResponseBadRequest('Bad Request', content_type='text/plain')
     try:
         model = Operators.objects.get(pk=id)
-        if operator.operator_organization != 0 and operator.operator_organization != model.operator_organization:
-            return HttpResponseForbidden('Forbidden', content_type='text/plain')
     except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
         return HttpResponseBadRequest('Bad Request', content_type='text/plain')
 
@@ -567,8 +562,6 @@ def select_multiple(request):
         for id in ids:
             try:
                 model = Operators.objects.get(pk=id)
-                if operator.operator_organization != 0 and operator.operator_organization != model.operator_organization:
-                    continue
                 if model.operator_status == Operators.STATUS_UNVERIFIED:
                     Methods_Operators.update_status(
                         request, operator, model, Operators.STATUS_UNAPPROVED)
@@ -580,8 +573,6 @@ def select_multiple(request):
         for id in ids:
             try:
                 model = Operators.objects.get(pk=id)
-                if operator.operator_organization != 0 and operator.operator_organization != model.operator_organization:
-                    continue
                 if model.operator_status == Operators.STATUS_UNAPPROVED:
                     Methods_Operators.update_status(
                         request, operator, model, Operators.STATUS_INACTIVE)
@@ -593,8 +584,6 @@ def select_multiple(request):
         for id in ids:
             try:
                 model = Operators.objects.get(pk=id)
-                if operator.operator_organization != 0 and operator.operator_organization != model.operator_organization:
-                    continue
                 if model.operator_status == Operators.STATUS_ACTIVE or model.operator_status == Operators.STATUS_INACTIVE:
                     Methods_Operators.update_status(
                         request, operator, model, Operators.STATUS_BLOCKED)
@@ -606,8 +595,6 @@ def select_multiple(request):
         for id in ids:
             try:
                 model = Operators.objects.get(pk=id)
-                if operator.operator_organization != 0 and operator.operator_organization != model.operator_organization:
-                    continue
                 if model.operator_status == Operators.STATUS_BLOCKED:
                     Methods_Operators.update_status(
                         request, operator, model, Operators.STATUS_INACTIVE)
@@ -621,8 +608,6 @@ def select_multiple(request):
         for id in ids:
             try:
                 model = Operators.objects.get(pk=id)
-                if operator.operator_organization != 0 and operator.operator_organization != model.operator_organization:
-                    continue
                 Methods_Operators.delete(request, model, operator)
             except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
                 continue
@@ -649,7 +634,7 @@ def create(request):
                 "password": form.cleaned_data['password'],
                 "name": form.cleaned_data['name'],
                 "phone_number": form.cleaned_data['phone_number'],
-                "organization_id": form.cleaned_data['organization_id'],
+                "organization": form.cleaned_data['organization_id'],
             }
             model = Methods_Operators.create(request, operator, data)
             action_url = '{domain}/{path}'.format(
@@ -700,8 +685,6 @@ def update(request, pk):
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
     try:
         model = Operators.objects.get(pk=pk)
-        if operator.operator_organization != 0 and operator.operator_organization != model.operator_organization:
-            return HttpResponseForbidden('Forbidden', content_type='text/plain')
     except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
         return HttpResponseNotFound('Not Found', content_type='text/plain')
     if request.method == 'POST':
@@ -711,7 +694,7 @@ def update(request, pk):
                 "email": form.cleaned_data['email'],
                 "name": form.cleaned_data['name'],
                 "phone_number": form.cleaned_data['phone_number'],
-                "organization_id": form.cleaned_data['organization_id'],
+                "organization": form.cleaned_data['organization_id'],
             }
             model = Methods_Operators.update(request, operator, data, model)
             messages.success(request, 'Updated successfully.')
@@ -760,8 +743,6 @@ def update_permissions_view(request, pk):
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
     try:
         model = Operators.objects.get(pk=pk)
-        if operator.operator_organization != 0 and operator.operator_organization != model.operator_organization:
-            return HttpResponseForbidden('Forbidden', content_type='text/plain')
     except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
         return HttpResponseNotFound('Not Found', content_type='text/plain')
     if request.method == 'POST':
@@ -827,13 +808,11 @@ def update_permissions_action(request):
     print(permissions_list)
     try:
         model = Operators.objects.get(pk=id)
-        if operator.operator_organization != 0 and operator.operator_organization != model.operator_organization:
-            return HttpResponseForbidden('Forbidden', content_type='text/plain')
     except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
         return HttpResponseNotFound('Not Found', content_type='text/plain')
     # delete existing permissions
     Operator_Access_Permissions.objects.filter(
-        operators_operator_id=id).delete()
+        operator_access_permission_operator_id=id).delete()
     if permissions_list is not None:
         i = 0
         while i < len(permissions_list):
@@ -841,8 +820,8 @@ def update_permissions_action(request):
                 access_permission = Access_Permissions.objects.get(
                     access_permission_name=permissions_list[i])
                 operator_access_permission = Operator_Access_Permissions()
-                operator_access_permission.access_permissions_access_permission_name = access_permission
-                operator_access_permission.operators_operator_id = model
+                operator_access_permission.operator_access_permission_name = access_permission.access_permission_name
+                operator_access_permission.operator_access_permission_operator_id = model.operator_id
                 operator_access_permission.operator_access_permission_updated_at = Utils.get_current_datetime_utc()
                 operator_access_permission.operator_access_permission_updated_by = operator.operator_id
                 operator_access_permission.save()
@@ -862,8 +841,6 @@ def update_reset_password(request, pk):
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
     try:
         model = Operators.objects.get(pk=pk)
-        if operator.operator_organization != 0 and operator.operator_organization != model.operator_organization:
-            return HttpResponseForbidden('Forbidden', content_type='text/plain')
     except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
         return HttpResponseNotFound('Not Found', content_type='text/plain')
     if request.method == 'POST':
@@ -915,12 +892,10 @@ def view(request, pk):
         Operators.set_redirect_field_name(request, request.path)
         return redirect(reverse("operators_signin"))
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
-    if settings.ACCESS_PERMISSION_OPERATOR_UPDATE not in auth_permissions.values():
+    if settings.ACCESS_PERMISSION_OPERATOR_VIEW not in auth_permissions.values():
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
     try:
         model = Operators.objects.get(pk=pk)
-        if operator.operator_organization != 0 and operator.operator_organization != model.operator_organization:
-            return HttpResponseForbidden('Forbidden', content_type='text/plain')
     except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
         return HttpResponseNotFound('Not Found', content_type='text/plain')
     model = Methods_Operators.format_view(request, operator, model)

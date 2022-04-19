@@ -52,9 +52,6 @@ class AjaxOrganizationsList(View):
 
         # Get objects
         objects = Organizations.objects
-        if operator.operator_organization != 0:
-            objects.filter(
-                Q(organization_id=operator.operator_organization))
 
         # Set record total
         records_total = objects.all().count()
@@ -187,7 +184,7 @@ def json_organizations(request):
         Operators.set_redirect_field_name(request, request.path)
         return redirect(reverse("operators_signin"))
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
-    if settings.ACCESS_PERMISSION_ORGANIZATION_VIEW not in auth_permissions.values():
+    if settings.ACCESS_PERMISSION_ORGANIZATIONS_VIEW not in auth_permissions.values():
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
     return HttpResponse(serializers.serialize("json", Organizations.objects.all()),
                         content_type="application/json")
@@ -200,7 +197,7 @@ def index(request):
         Operators.set_redirect_field_name(request, request.path)
         return redirect(reverse("operators_signin"))
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
-    if settings.ACCESS_PERMISSION_ORGANIZATION_VIEW not in auth_permissions.values():
+    if settings.ACCESS_PERMISSION_ORGANIZATIONS_VIEW not in auth_permissions.values():
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
 
     search_form = OrganizationSearchIndexForm(request.POST or None)
@@ -235,7 +232,7 @@ def select_single(request):
     if operator is None:
         return HttpResponse('signin', content_type='text/plain')
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
-    if settings.ACCESS_PERMISSION_ORGANIZATION_UPDATE not in auth_permissions.values():
+    if settings.ACCESS_PERMISSION_ORGANIZATIONS_UPDATE not in auth_permissions.values():
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
     action = request.POST['action']
     id = request.POST['id']
@@ -243,8 +240,6 @@ def select_single(request):
         return HttpResponseBadRequest('Bad Request', content_type='text/plain')
     try:
         model = Organizations.objects.get(pk=id)
-        if operator.operator_organization != 0 and operator.operator_organization != model.organization_id:
-            return HttpResponseForbidden('Forbidden', content_type='text/plain')
     except(TypeError, ValueError, OverflowError, Organizations.DoesNotExist):
         return HttpResponseBadRequest('Bad Request', content_type='text/plain')
 
@@ -263,7 +258,7 @@ def select_single(request):
                 request, 'Unblocked successfully.')
 
     if action == 'delete':
-        if settings.ACCESS_PERMISSION_ORGANIZATION_DELETE not in auth_permissions.values():
+        if settings.ACCESS_PERMISSION_ORGANIZATIONS_DELETE not in auth_permissions.values():
             return HttpResponseForbidden('Forbidden', content_type='text/plain')
         Methods_Organizations.delete(request, model, operator)
         messages.success(request, 'Deleted successfully.')
@@ -277,7 +272,7 @@ def select_multiple(request):
     if operator is None:
         return HttpResponse('signin', content_type='text/plain')
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
-    if settings.ACCESS_PERMISSION_ORGANIZATION_UPDATE not in auth_permissions.values():
+    if settings.ACCESS_PERMISSION_ORGANIZATIONS_UPDATE not in auth_permissions.values():
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
     action = request.POST['action']
     ids = request.POST['ids']
@@ -292,8 +287,6 @@ def select_multiple(request):
         for id in ids:
             try:
                 model = Organizations.objects.get(pk=id)
-                if operator.operator_organization != 0 and operator.operator_organization != model.organization_id:
-                    continue
                 if model.organization_status == Organizations.STATUS_ACTIVE or model.organization_status == Organizations.STATUS_INACTIVE:
                     Methods_Organizations.update_status(
                         request, operator, model, Organizations.STATUS_BLOCKED)
@@ -305,8 +298,6 @@ def select_multiple(request):
         for id in ids:
             try:
                 model = Organizations.objects.get(pk=id)
-                if operator.operator_organization != 0 and operator.operator_organization != model.organization_id:
-                    continue
                 if model.organization_status == Organizations.STATUS_BLOCKED:
                     Methods_Organizations.update_status(
                         request, operator, model, Organizations.STATUS_ACTIVE)
@@ -315,13 +306,11 @@ def select_multiple(request):
         messages.success(request, 'Unblocked successfully.')
 
     if action == 'delete':
-        if settings.ACCESS_PERMISSION_ORGANIZATION_DELETE not in auth_permissions.values():
+        if settings.ACCESS_PERMISSION_ORGANIZATIONS_DELETE not in auth_permissions.values():
             return HttpResponseForbidden('Forbidden', content_type='text/plain')
         for id in ids:
             try:
                 model = Organizations.objects.get(pk=id)
-                if operator.operator_organization != 0 and operator.operator_organization != model.organization_id:
-                    continue
                 Methods_Organizations.delete(request, model, operator)
             except(TypeError, ValueError, OverflowError, Organizations.DoesNotExist):
                 continue
@@ -337,9 +326,7 @@ def create(request):
         Operators.set_redirect_field_name(request, request.path)
         return redirect(reverse("operators_signin"))
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
-    if settings.ACCESS_PERMISSION_ORGANIZATION_CREATE not in auth_permissions.values():
-        return HttpResponseForbidden('Forbidden', content_type='text/plain')
-    if operator.operator_organization != 0:
+    if settings.ACCESS_PERMISSION_ORGANIZATIONS_CREATE not in auth_permissions.values():
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
 
     if request.method == 'POST':
@@ -390,12 +377,10 @@ def update(request, pk):
         Operators.set_redirect_field_name(request, request.path)
         return redirect(reverse("operators_signin"))
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
-    if settings.ACCESS_PERMISSION_ORGANIZATION_UPDATE not in auth_permissions.values():
+    if settings.ACCESS_PERMISSION_ORGANIZATIONS_UPDATE not in auth_permissions.values():
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
     try:
         model = Organizations.objects.get(pk=pk)
-        if operator.operator_organization != 0 and operator.operator_organization != model.organization_id:
-            return HttpResponseForbidden('Forbidden', content_type='text/plain')
     except(TypeError, ValueError, OverflowError, Organizations.DoesNotExist):
         return HttpResponseNotFound('Not Found', content_type='text/plain')
     if request.method == 'POST':
@@ -451,12 +436,10 @@ def view(request, pk):
         Operators.set_redirect_field_name(request, request.path)
         return redirect(reverse("operators_signin"))
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
-    if settings.ACCESS_PERMISSION_ORGANIZATION_UPDATE not in auth_permissions.values():
+    if settings.ACCESS_PERMISSION_ORGANIZATIONS_VIEW not in auth_permissions.values():
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
     try:
         model = Organizations.objects.get(pk=pk)
-        if operator.operator_organization != 0 and operator.operator_organization != model.organization_id:
-            return HttpResponseForbidden('Forbidden', content_type='text/plain')
     except(TypeError, ValueError, OverflowError, Organizations.DoesNotExist):
         return HttpResponseNotFound('Not Found', content_type='text/plain')
     model = Methods_Organizations.format_view(request, operator, model)

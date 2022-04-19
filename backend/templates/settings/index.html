@@ -21,6 +21,11 @@
                 <div class="panel">
                     <div class="panel-body">
                         <div>
+                            {% if ACCESS_PERMISSION_LOG_VIEW in auth_permissions.values %}
+                                <a href="{% url 'card_logs_index' %}" class="btn btn-primary">
+                                    Card Logs
+                                </a>
+                            {% endif %}
                             {% if ACCESS_PERMISSION_SETTINGS_VIEW in auth_permissions.values %}
                                 <a href="{% url 'settings_update_database' %}" class="btn btn-danger">
                                     Update Database

@@ -55,21 +55,21 @@
                                     Multiple Action &nbsp;&nbsp;<i class="fa fa-caret-down"></i></button>
                                 <ul class="dropdown-menu">
                                     <div class="dt-button-collection">
-                                        {% if ACCESS_PERMISSION_ORGANIZATION_UPDATE in auth_permissions.values %}
+                                        {% if ACCESS_PERMISSION_ORGANIZATIONS_UPDATE in auth_permissions.values %}
                                             <a class="btn btn-default btn-block"
                                             href="#"
                                             onclick="multipleSelect('{{ select_multiple_url }}', 'block');">
                                                 Block Selected
                                             </a>
                                         {% endif %}
-                                        {% if ACCESS_PERMISSION_ORGANIZATION_UPDATE in auth_permissions.values %}
+                                        {% if ACCESS_PERMISSION_ORGANIZATIONS_UPDATE in auth_permissions.values %}
                                             <a class="btn btn-default btn-block"
                                             href="#"
                                             onclick="multipleSelect('{{ select_multiple_url }}', 'unblock');">
                                                 Unblock Selected
                                             </a>
                                         {% endif %}
-                                        {% if ACCESS_PERMISSION_ORGANIZATION_DELETE in auth_permissions.values %}
+                                        {% if ACCESS_PERMISSION_ORGANIZATIONS_DELETE in auth_permissions.values %}
                                             <a class="btn btn-default btn-block"
                                             href="#"
                                             onclick="multipleSelect('{{ select_multiple_url }}', 'delete');">
@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         <div class="dt-buttons" style="margin-right:3px;">
-                            {% if ACCESS_PERMISSION_ORGANIZATION_CREATE in auth_permissions.values %}
+                            {% if ACCESS_PERMISSION_ORGANIZATIONS_CREATE in auth_permissions.values %}
                                 <a class="btn btn-success"
                                 href="{% url 'organizations_create' %}">
                                     <i class="fa fa-plus" aria-hidden="true"></i> Add

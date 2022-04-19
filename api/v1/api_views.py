@@ -111,11 +111,11 @@ def card_balance(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operators_operator_id=operator).all()
+            operator_access_permission_operator_id=operator).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
-                item.access_permissions_access_permission_name.access_permission_name)
+                item.operator_access_permission_name)
 
         if 'card-fetch-balance' not in items_access_permissions:
             response = {
@@ -183,11 +183,11 @@ def card_balance_complete(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operators_operator_id=operator).all()
+            operator_access_permission_operator_id=operator).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
-                item.access_permissions_access_permission_name.access_permission_name)
+                item.operator_access_permission_name)
 
         if 'card-fetch-balance' not in items_access_permissions:
             response = {
@@ -265,11 +265,11 @@ def card_topup(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operators_operator_id=operator).all()
+            operator_access_permission_operator_id=operator).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
-                item.access_permissions_access_permission_name.access_permission_name)
+                item.operator_access_permission_name)
 
         if 'card-topup' not in items_access_permissions:
             response = {
@@ -338,11 +338,11 @@ def card_topup_complete(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operators_operator_id=operator).all()
+            operator_access_permission_operator_id=operator).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
-                item.access_permissions_access_permission_name.access_permission_name)
+                item.operator_access_permission_name)
 
         if 'card-topup' not in items_access_permissions:
             response = {
@@ -441,11 +441,11 @@ def card_pay(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operators_operator_id=operator).all()
+            operator_access_permission_operator_id=operator).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
-                item.access_permissions_access_permission_name.access_permission_name)
+                item.operator_access_permission_name)
 
         if 'card-deduct-balance' not in items_access_permissions:
             response = {
@@ -514,11 +514,11 @@ def card_pay_complete(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operators_operator_id=operator).all()
+            operator_access_permission_operator_id=operator).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
-                item.access_permissions_access_permission_name.access_permission_name)
+                item.operator_access_permission_name)
 
         if 'card-deduct-balance' not in items_access_permissions:
             response = {

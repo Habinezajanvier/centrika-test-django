@@ -23,24 +23,24 @@
                 <div class="panel">
                     <div class="panel-body">
                         <div>
-                            {% if ACCESS_PERMISSION_ORGANIZATION_UPDATE in auth_permissions.values %}
+                            {% if ACCESS_PERMISSION_ORGANIZATIONS_UPDATE in auth_permissions.values %}
                                 <a href="{% url 'organizations_update' pk=model.organization_id %}" class="btn btn-info">Update</a>
                             {% endif %}
-                                {% if ACCESS_PERMISSION_ORGANIZATION_UPDATE in auth_permissions.values %}
+                                {% if ACCESS_PERMISSION_ORGANIZATIONS_UPDATE in auth_permissions.values %}
                                     {% if model.organization_status == model.STATUS_ACTIVE %}
                                         <a href="#"
                                         onclick="singleSelect('{{ select_single_url }}', 'block', '{{ model.organization_id }}');"
                                         class="btn btn-danger">Block</a>
                                     {% endif %}
                                 {% endif %}
-                                {% if ACCESS_PERMISSION_ORGANIZATION_UPDATE in auth_permissions.values %}
+                                {% if ACCESS_PERMISSION_ORGANIZATIONS_UPDATE in auth_permissions.values %}
                                     {% if model.organization_status == model.STATUS_BLOCKED %}
                                         <a href="#"
                                         onclick="singleSelect('{{ select_single_url }}', 'unblock', '{{ model.organization_id }}');"
                                         class="btn btn-warning">Unblock</a>
                                     {% endif %}
                                 {% endif %}
-                                {% if ACCESS_PERMISSION_ORGANIZATION_DELETE in auth_permissions.values %}
+                                {% if ACCESS_PERMISSION_ORGANIZATIONS_DELETE in auth_permissions.values %}
                                     <a href="#"
                                     onclick="singleSelect('{{ select_single_url }}', 'delete', '{{ model.organization_id }}', '{{ index_url }}');"
                                     class="btn btn-danger">Delete</a>

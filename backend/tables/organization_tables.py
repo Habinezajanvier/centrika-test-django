@@ -75,15 +75,15 @@ class OrganizationsTable(tables.Table):
     @staticmethod
     def render_actions(record, auth_permissions):
         data = ''
-        if settings.ACCESS_PERMISSION_ORGANIZATION_VIEW in auth_permissions.values():
+        if settings.ACCESS_PERMISSION_ORGANIZATIONS_VIEW in auth_permissions.values():
             url = reverse("organizations_view", args=[record.pk])
             data += '<button class="demo-delete-row btn btn-info btn-xs" onclick="javascript:location.href = \'' + \
                 url+'\';"><i class="fa fa-eye"></i></button>&nbsp;'
-        if settings.ACCESS_PERMISSION_ORGANIZATION_UPDATE in auth_permissions.values():
+        if settings.ACCESS_PERMISSION_ORGANIZATIONS_UPDATE in auth_permissions.values():
             url = reverse("organizations_update", args=[record.pk])
             data += '<button class="demo-delete-row btn btn-warning btn-xs" onclick="javascript:location.href = \'' + \
                 url+'\';"><i class="fa fa-edit"></i></button>&nbsp;'
-        if settings.ACCESS_PERMISSION_ORGANIZATION_DELETE in auth_permissions.values():
+        if settings.ACCESS_PERMISSION_ORGANIZATIONS_DELETE in auth_permissions.values():
             url = reverse("organizations_select_single")
             data += '<button class = "demo-delete-row btn btn-danger btn-xs" onclick="javascript: singleSelect(\'' + url + '\', \'delete\', \'' + str(
                 record.organization_id) + '\');" ><i class="fa fa-trash"></i></button>&nbsp;'

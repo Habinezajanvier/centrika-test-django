@@ -272,9 +272,7 @@ def index(request):
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
     if settings.ACCESS_PERMISSION_LOG_VIEW not in auth_permissions.values():
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
-    # if operator.operator_organization != 0:
-    #     return HttpResponseForbidden('Forbidden', content_type='text/plain')
-
+    
     objects = {}
     table = CardLogsTable({})
     # table.paginate(page=request.GET.get('page', 1), per_page=5)
@@ -302,8 +300,6 @@ def view(request, pk):
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
     if settings.ACCESS_PERMISSION_LOG_VIEW not in auth_permissions.values():
         return HttpResponseForbidden('Forbidden', content_type='text/plain')
-    # if operator.operator_organization != 0:
-    #     return HttpResponseForbidden('Forbidden', content_type='text/plain')
     try:
         model = Card_Logs.objects.get(pk=pk)
     except(TypeError, ValueError, OverflowError, Card_Logs.DoesNotExist):

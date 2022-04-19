@@ -64,6 +64,7 @@ class Methods_Operators:
             'type': model.operator_type,
             'gender': model.operator_gender,
             'phone_number': model.operator_phone_number,
+            'organization_id': model.operator_organization,
         }
 
     @classmethod
@@ -82,19 +83,19 @@ class Methods_Operators:
             Operators, 'operator_auth_key')
         model.operator_password = make_password(data['password'])
 
-        if 'type' in data:
-            model.operator_type = data['type']
-        else:
-            model.operator_type = Operators.TYPE_OTHER
+        # if 'type' in data:
+        #     model.operator_type = data['type']
+        # else:
+        model.operator_type = 0
         if 'name' in data:
             model.operator_first_name = data['name']
         else:
             model.operator_first_name = ''
         model.operator_last_name = ''
-        if 'gender' in data:
-            model.operator_gender = data['gender']
-        else:
-            model.operator_gender = ''
+        # if 'gender' in data:
+        #     model.operator_gender = data['gender']
+        # else:
+        model.operator_gender = 0
         if 'phone_number' in data:
             model.operator_phone_number = data['phone_number']
         else:
@@ -103,6 +104,10 @@ class Methods_Operators:
             model.operator_username = model.operator_email_id = data['email']
         else:
             model.operator_username = model.operator_email_id = ''
+        if 'organization' in data:
+            model.operator_organization = data['organization']
+        else:
+            model.operator_organization = '0'
 
         model.operator_created_at = Utils.get_current_datetime_utc()
         model.operator_created_by = operator.operator_id
@@ -117,16 +122,18 @@ class Methods_Operators:
         data = json.dumps(data)
         data = json.loads(data)
 
-        if 'type' in data:
-            model.operator_type = data['type']
+        # if 'type' in data:
+        #     model.operator_type = data['type']
         if 'name' in data:
             model.operator_first_name = data['name']
-        if 'gender' in data:
-            model.operator_gender = data['gender']
+        # if 'gender' in data:
+        #     model.operator_gender = data['gender']
         if 'phone_number' in data:
             model.operator_phone_number = data['phone_number']
         if 'email' in data:
             model.operator_email_id = data['email']
+        if 'organization' in data:
+            model.operator_organization = data['organization']
 
         model.operator_updated_at = Utils.get_current_datetime_utc()
         model.operator_updated_by = operator.operator_id
@@ -138,7 +145,7 @@ class Methods_Operators:
         model.operator_updated_at = Utils.get_current_datetime_utc()
         model.operator_updated_by = operator.operator_id
         model.operator_status = status
-        # model.save()
+        model.save()
         return model
 
     @classmethod

@@ -149,12 +149,10 @@ class OperatorsTable(tables.Table):
 
     @staticmethod
     def render_operator_organization_id(record, auth_permissions):
-        if record.operator_organization == 0:
-            return 'All'
         try:
             organization = Organizations.objects.get(
                 pk=record.operator_organization)
-            if settings.ACCESS_PERMISSION_ORGANIZATION_VIEW in auth_permissions.values():
+            if settings.ACCESS_PERMISSION_ORGANIZATIONS_VIEW in auth_permissions.values():
                 return mark_safe(
                     '<a href=' + reverse("organizations_view",
                                          args=[organization.organization_id]) + ' style=\'text-decoration:underline; color:#1B82DC;\' >' +
