@@ -161,8 +161,6 @@ def profile_update(request):
         Operators.set_redirect_field_name(request, request.path)
         return redirect(reverse("operators_signin"))
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
-    if settings.ACCESS_PERMISSION_OPERATOR_UPDATE not in auth_permissions.values():
-        return HttpResponseForbidden('Forbidden', content_type='text/plain')
     model = operator
     if request.method == 'POST':
         form = OperatorProfileUpdateForm(request.POST)
@@ -212,8 +210,6 @@ def profile_change_password(request):
         Operators.set_redirect_field_name(request, request.path)
         return redirect(reverse("operators_signin"))
     auth_permissions = Methods_Operators.get_auth_permissions(operator)
-    if settings.ACCESS_PERMISSION_OPERATOR_UPDATE not in auth_permissions.values():
-        return HttpResponseForbidden('Forbidden', content_type='text/plain')
     model = operator
     if request.method == 'POST':
         form = OperatorChangePasswordForm(request.POST)
