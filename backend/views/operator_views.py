@@ -1,5 +1,5 @@
 import json
-
+import bcrypt
 from app import settings
 from app.models.failed_login import Failed_Login
 from app.models.methods.emails import Methods_Emails
