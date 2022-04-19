@@ -146,9 +146,9 @@ if IS_LOCAL:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'acgroup_incity_apis_db',
+            'NAME': 'db_tap_and_go_ticketing',
             'USER': 'root',
-            'PASSWORD': 'Kigali@12345',
+            'PASSWORD': 'root',
             'HOST': 'localhost',
             'PORT': '3306',
             'OPTIONS': {
@@ -160,10 +160,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'acgroup_incity_apis_db',
-            'USER': 'admin',
-            'PASSWORD': 'HQyRhm9ZAms83BFk',
-            'HOST': 'ac-grp-db-server-1.chjgerpgnycg.eu-central-1.rds.amazonaws.com',
+            'NAME': 'db_tap_and_go_ticketing',
+            'USER': 'root',
+            'PASSWORD': 'root',
+            'HOST': 'localhost',
             'PORT': '3306',
             'OPTIONS': {
                 'sql_mode': 'traditional',
