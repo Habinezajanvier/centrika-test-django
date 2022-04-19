@@ -9,6 +9,7 @@ from app.models.operator_access_permissions import Operator_Access_Permissions
 from app.models.operators import Operators
 from django.contrib.auth.hashers import check_password
 from django.db.models import Q
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 from PIL import Image
 from rest_framework.decorators import api_view, permission_classes
@@ -26,22 +27,12 @@ def send_response(response, status):
     return Response(response, status=HTTP_200_OK, content_type="application/json")
 
 
-@csrf_exempt
 @api_view(["POST"])
 @permission_classes((AllowAny,))
+@ensure_csrf_cookie
 def operator_login(request):
     try:
-        print(request.headers)
-        api_token = request.headers['x-auth']
-        if api_token != settings.API_TOKEN:
-            response = {
-                "error": True,
-                "message": 'Invalid token.',
-            }
-            return send_response(response, HTTP_400_BAD_REQUEST)
-
-        print(request.body)
-        request_body = json.loads(request.body, encoding='utf-8')
+        request_body = request.data
         print(request_body)
         print(request.POST)
 
@@ -123,7 +114,7 @@ def card_balance(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_operator_id=operator).all()
+            operator_access_permission_operator_id=operator.operator_id).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
@@ -136,8 +127,7 @@ def card_balance(request):
             }
             return send_response(response, HTTP_403_FORBIDDEN)
 
-        print(request.body)
-        request_body = json.loads(request.body, encoding='utf-8')
+        request_body = request.data
         print(request_body)
         print(request.POST)
 
@@ -195,7 +185,7 @@ def card_balance_complete(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_operator_id=operator).all()
+            operator_access_permission_operator_id=operator.operator_id).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
@@ -208,8 +198,7 @@ def card_balance_complete(request):
             }
             return send_response(response, HTTP_403_FORBIDDEN)
 
-        print(request.body)
-        request_body = json.loads(request.body, encoding='utf-8')
+        request_body = request.data
         print(request_body)
         print(request.POST)
 
@@ -277,7 +266,7 @@ def card_topup(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_operator_id=operator).all()
+            operator_access_permission_operator_id=operator.operator_id).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
@@ -290,8 +279,7 @@ def card_topup(request):
             }
             return send_response(response, HTTP_403_FORBIDDEN)
 
-        print(request.body)
-        request_body = json.loads(request.body, encoding='utf-8')
+        request_body = request.data
         print(request_body)
         print(request.POST)
 
@@ -350,7 +338,7 @@ def card_topup_complete(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_operator_id=operator).all()
+            operator_access_permission_operator_id=operator.operator_id).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
@@ -363,8 +351,7 @@ def card_topup_complete(request):
             }
             return send_response(response, HTTP_403_FORBIDDEN)
 
-        print(request.body)
-        request_body = json.loads(request.body, encoding='utf-8')
+        request_body = request.data
         print(request_body)
         print(request.POST)
 
@@ -460,7 +447,7 @@ def card_pay(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_operator_id=operator).all()
+            operator_access_permission_operator_id=operator.operator_id).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
@@ -473,8 +460,7 @@ def card_pay(request):
             }
             return send_response(response, HTTP_403_FORBIDDEN)
 
-        print(request.body)
-        request_body = json.loads(request.body, encoding='utf-8')
+        request_body = request.data
         print(request_body)
         print(request.POST)
 
@@ -571,7 +557,7 @@ def card_pay_complete(request):
             return send_response(response, HTTP_403_FORBIDDEN)
 
         operator_access_permissions = Operator_Access_Permissions.objects.filter(
-            operator_access_permission_operator_id=operator).all()
+            operator_access_permission_operator_id=operator.operator_id).all()
         items_access_permissions = []
         for item in operator_access_permissions:
             items_access_permissions.append(
@@ -584,8 +570,7 @@ def card_pay_complete(request):
             }
             return send_response(response, HTTP_403_FORBIDDEN)
 
-        print(request.body)
-        request_body = json.loads(request.body, encoding='utf-8')
+        request_body = request.data
         print(request_body)
         print(request.POST)
 

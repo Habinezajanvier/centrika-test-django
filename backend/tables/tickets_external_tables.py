@@ -130,7 +130,7 @@ class TicketsExternalTable(tables.Table):
     @staticmethod
     def render_ticket_id(record):
         return mark_safe(
-            '<a href=' + reverse("tickets_view",
+            '<a href=' + reverse("tickets_external_view",
                                  args=[record.pk]) + ' style=\'text-decoration:underline; color:#1B82DC;\' >' +
             str(record.ticket_id) + '</a>')
 

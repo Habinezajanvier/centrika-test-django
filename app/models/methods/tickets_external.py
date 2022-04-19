@@ -10,10 +10,12 @@ from app.models.operators import Operators
 class Methods_Tickets_External():
     @classmethod
     def format_view(cls, request, operator, model):
-        model.ticket_requested_at = Utils.get_convert_datetime(model.ticket_requested_at,
+        if model.ticket_requested_at != 0:
+            model.ticket_requested_at = Utils.get_convert_datetime(model.ticket_requested_at,
                                                                settings.TIME_ZONE,
                                                                settings.APP_CONSTANT_DISPLAY_TIME_ZONE) + ' ' + settings.APP_CONSTANT_DISPLAY_TIME_ZONE_INFO
-        model.ticket_confirmed_at = Utils.get_convert_datetime(model.ticket_confirmed_at,
+        if model.ticket_confirmed_at != 0:      
+            model.ticket_confirmed_at = Utils.get_convert_datetime(model.ticket_confirmed_at,
                                                                settings.TIME_ZONE,
                                                                settings.APP_CONSTANT_DISPLAY_TIME_ZONE) + ' ' + settings.APP_CONSTANT_DISPLAY_TIME_ZONE_INFO
 
