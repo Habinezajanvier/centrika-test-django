@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 from backend.views import site_views, setting_views
 
-from backend.routes import operators, card_logs, organizations
+from backend.routes import operators, card_logs
 
 urlpatterns = [
 
@@ -40,4 +40,3 @@ urlpatterns = [
 
 urlpatterns += operators.urlpatterns
 urlpatterns += card_logs.urlpatterns
-urlpatterns += organizations.urlpatterns
