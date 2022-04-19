@@ -1,0 +1,102 @@
+{% extends '_include/base-general.html' %}
+{% block head %}
+    {% load static %}
+    <title>{{ APP_CONSTANT_APP_NAME }} : {{ title }}</title>
+    {% load static %}
+    {% load prettyjson %}
+    {% prettyjson_setup %}
+{% endblock %}
+
+{% block body %}
+    {% csrf_token %}
+    <div id="page-head">
+        <div id="page-title">
+            <h1 class="page-header text-overflow">{{ title }}</h1>
+        </div>
+        <ul class="breadcrumb">
+            <li><a href="{% url 'operators_dashboard' %}">Home</a></li>
+            <li><a href="{{ index_url }}">{{ title }}</a></li>
+            <li class="active">{{ <model class="ticket_id"></model> }}</li>
+            <li class="active">Details</li>
+        </ul>
+    </div>
+    <div id="page-content" style="padding-top:0px;">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <table class="table table-bordered table-hover" cellspacing="0" width="100%">
+                            <thead>
+                            <tr style="background-color:{{ COLOR_PRIMARY }};">
+                                <th style="width:20%; color:#fff;">Key</th>
+                                <th style="width:80%; color:#fff;">Value</th>
+                            </tr>
+                            <tr>
+                                <td>Id</td>
+                                <td>{{ model.ticket_id }}</td>
+                            </tr>
+                            <tr>
+                                <td>Organization</td>
+                                <td>{{ model.ticket_external }}</td>
+                            </tr>
+                            <tr>
+                                <td>Reference Ticket Id</td>
+                                <td>{{ model.ticket_reference }}</td>
+                            </tr>
+                            <tr>
+                                <td>Trip Id</td>
+                                <td>{{ model.ticket_schedule_id }}</td>
+                            </tr>
+                            <tr>
+                                <td>Travel Time</td>
+                                <td>{{ model.ticket_travel_date }} {{ model.ticket_travel_time }}</td>
+                            </tr>
+                            <tr>
+                                <td>Destination</td>
+                                <td>{{ model.ticket_destination_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Ticket Price</td>
+                                <td>{{ model.ticket_price }}</td>
+                            </tr>
+                            <tr>
+                                <td>Card Number</td>
+                                <td>{{ model.ticket_card_number }}</td>
+                            </tr>
+                            <tr>
+                                <td>Card Old Balance</td>
+                                <td>{{ model.ticket_card_old_balance }}</td>
+                            </tr>
+                            <tr>
+                                <td>Card New Balance</td>
+                                <td>{{ model.ticket_card_new_balance }}</td>
+                            </tr>
+                            <tr>
+                                <td>Card Transaction Id</td>
+                                <td>{{ model.ticket_card_transaction_id }}</td>
+                            </tr>
+                            <tr>
+                                <td>Card Transaction Status</td>
+                                <td>{{ model.ticket_card_transaction_status }}</td>
+                            </tr>
+                            <tr>
+                                <td>Requested At</td>
+                                <td>{{ model.ticket_requested_at }}</td>
+                            </tr>
+                            <tr>
+                                <td>Confirmed At</td>
+                                <td>{{ model.ticket_confirmed_at }}</td>
+                            </tr>
+                            <tr>
+                                <td>Card Response</td>
+                                <td>{{ model.ticket_card_response }}</td>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include '_include/single_select.html' %}
+{% endblock %}

@@ -78,18 +78,36 @@
                             {% endif %}
                         {% endif %}
 
+                        {% if ACCESS_PERMISSION_TICKETS_VIEW in auth_permissions.values %}
+                            {% if section == BACKEND_SECTION_TICKETS %}
+                                <li class="active-link">
+                                    <a href="{% url 'tickets_external_index' %}">
+                                        <i class="glyphicon glyphicon-stats"></i>
+                                        <span class="menu-title"><b>{{ MODEL_TICKETS_PLURAL_TITLE }}</b> </span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="{% url 'tickets_external_index' %}">
+                                        <i class="glyphicon glyphicon-stats"></i>
+                                        <span class="menu-title"><b>{{ MODEL_TICKETS_PLURAL_TITLE }}</b> </span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+
                         {% if ACCESS_PERMISSION_ORGANIZATIONS_VIEW in auth_permissions.values %}
                             {% if section == BACKEND_SECTION_ORGANIZATIONS %}
                                 <li class="active-link">
                                     <a href="{% url 'organizations_index' %}">
-                                        <i class="fa fa-history"></i>
+                                        <i class="glyphicon glyphicon-stats"></i>
                                         <span class="menu-title"><b>{{ MODEL_ORGANIZATIONS_PLURAL_TITLE }}</b> </span>
                                     </a>
                                 </li>
                             {% else %}
                                 <li>
                                     <a href="{% url 'organizations_index' %}">
-                                        <i class="fa fa-history"></i>
+                                        <i class="glyphicon glyphicon-stats"></i>
                                         <span class="menu-title"><b>{{ MODEL_ORGANIZATIONS_PLURAL_TITLE }}</b> </span>
                                     </a>
                                 </li>
@@ -100,14 +118,14 @@
                             {% if section == BACKEND_SECTION_OPERATORS %}
                                 <li class="active-link">
                                     <a href="{% url 'operators_index' %}">
-                                        <i class="fa fa-history"></i>
+                                        <i class="glyphicon glyphicon-stats"></i>
                                         <span class="menu-title"><b>{{ MODEL_OPERATORS_PLURAL_TITLE }}</b> </span>
                                     </a>
                                 </li>
                             {% else %}
                                 <li>
                                     <a href="{% url 'operators_index' %}">
-                                        <i class="fa fa-history"></i>
+                                        <i class="glyphicon glyphicon-stats"></i>
                                         <span class="menu-title"><b>{{ MODEL_OPERATORS_PLURAL_TITLE }}</b> </span>
                                     </a>
                                 </li>

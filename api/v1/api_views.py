@@ -599,7 +599,7 @@ def card_pay_complete(request):
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
 
-        error, message, card_content = V2_Methods_Asis.process_payment(
+        error, message, card_content, card_log = V2_Methods_Asis.process_payment(
             request, operator, None, ticket.ticket_card_number, 200, card_command, access_token, session_data, card_log)
         if error:
             response = {
@@ -607,6 +607,13 @@ def card_pay_complete(request):
                 "message": message,
             }
             return send_response(response, HTTP_400_BAD_REQUEST)
+        
+        ticket.ticket_card_response = card_content
+        ticket.ticket_card_transaction_status = card_log.card_log_response
+        ticket.ticket_card_old_balance = card_log.card_log_old_balance
+        ticket.ticket_card_new_balance = card_log.card_log_new_balance
+        ticket.ticket_confirmed_at = Utils.get_current_datetime_utc()
+        ticket.save()
 
         response = {
             "error": False,

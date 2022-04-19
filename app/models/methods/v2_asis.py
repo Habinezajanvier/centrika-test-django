@@ -359,7 +359,7 @@ class V2_Methods_Asis():
         if error:
             return error, message, None
 
-        return False, 'Success', response_content
+        return False, 'Success', response_content, card_log
 
     @classmethod
     def card_topup(cls, request, operator, card_number, amount):
