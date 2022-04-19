@@ -161,8 +161,8 @@ else:
         'default': {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'db_tap_and_go_ticketing_v6_aws',
-            'USER': 'root',
-            'PASSWORD': 'root',
+            'USER': 'tapandgo',
+            'PASSWORD': '5Pn2GM=ddaFjRQW5',
             'HOST': 'localhost',
             'PORT': '3306',
             'OPTIONS': {
