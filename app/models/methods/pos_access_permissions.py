@@ -15,17 +15,17 @@ from tinymce.models import HTMLField
 
 from app import settings
 from app.data import ARRAY_GENDER, ARRAY_ARMED
-from app.models import Access_Permissions
+from app.models import Pos_Access_Permissions
 from app.utils import Utils
 
 
-class Methods_Access_Permissions:
+class Methods_Pos_Access_Permissions:
     @classmethod
-    def get_access_permissions(cls):
-        access_permissions = Access_Permissions.objects.all()
+    def get_pos_access_permissions(cls):
+        pos_access_permissions = Pos_Access_Permissions.objects.all()
         auth_permissions = {}
         counter = 0
-        for access_permission in access_permissions:
-            auth_permissions[counter] = access_permission.access_permission_name
+        for pos_access_permission in pos_access_permissions:
+            auth_permissions[counter] = pos_access_permission.pos_access_permission_name
             counter = counter + 1
         return auth_permissions

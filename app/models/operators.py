@@ -1,11 +1,10 @@
-from app import settings
-from app.data import ARRAY_GENDER
-from django.core.validators import (MaxLengthValidator, MinLengthValidator,
-                                    RegexValidator)
+from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator
 from django.db import models
 from django.middleware.csrf import rotate_token
-from django.utils.crypto import (constant_time_compare, get_random_string,
-                                 salted_hmac)
+from django.utils.crypto import get_random_string, salted_hmac, constant_time_compare
+
+from app import settings
+from app.data import ARRAY_GENDER
 
 
 class Operators(models.Model):
@@ -41,11 +40,11 @@ class Operators(models.Model):
     TEXT_STATUS_BLOCKED = 'Blocked'
     TEXT_STATUS_UNVERIFIED = 'Unverified'
     TEXT_STATUS_UNAPPROVED = 'Unapproved'
-    STATUS_ACTIVE = 0
-    STATUS_INACTIVE = 1
-    STATUS_BLOCKED = 2
-    STATUS_UNVERIFIED = 3
-    STATUS_UNAPPROVED = 4
+    STATUS_ACTIVE = 3
+    STATUS_INACTIVE = 2
+    STATUS_BLOCKED = 4
+    STATUS_UNVERIFIED = 0
+    STATUS_UNAPPROVED = 1
     ARRAY_STATUS = [
         STATUS_ACTIVE,
         STATUS_INACTIVE,
@@ -85,33 +84,40 @@ class Operators(models.Model):
         ';color:#FFFFFF;width:100px;text-align: center;\'><b> Unapproved <b></div>'
 
     operator_id = models.AutoField(SINGULAR_TITLE + ' Id', primary_key=True)
-    operator_type = models.CharField(
-        'Type', max_length=20, blank=False, choices=DROPDOWN_TYPE, default=TYPE_OTHER)
     operator_username = models.CharField(
         'Username', max_length=100, blank=False, unique=True)
     operator_auth_key = models.CharField(
         'Auth key', max_length=255, blank=False)
-    operator_password_hash = models.CharField(
+    operator_password = models.CharField(
         'Password', max_length=255, blank=False)
     operator_password_reset_token = models.CharField(
         'Password reset token', max_length=255, blank=True)
-    operator_name = models.CharField('Name', max_length=100, blank=False)
-    operator_gender = models.CharField(
-        'Gender', max_length=6, choices=ARRAY_GENDER, default='')
+    operator_type = models.IntegerField(
+        'type', blank=False, default=0)
+    operator_company_id = models.IntegerField(
+        'Company', blank=False, default=0)
+    operator_first_name = models.CharField('Name', max_length=100, blank=True)
+    operator_last_name = models.CharField(
+        'Last Name', max_length=100, blank=True)
+    operator_gender = models.IntegerField(
+        'Gender', blank=False, default=0)
+    operator_email_id = models.EmailField(
+        'Email id', max_length=100, blank=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
                                  message="Phone number must be entered in the format: '+250123456789'. Up to 13 digits allowed.")
-    operator_contact_phone_number = models.CharField('Phone Number',
-                                                     validators=[phone_regex, MinLengthValidator(10),
-                                                                 MaxLengthValidator(13)],
-                                                     max_length=13, blank=True)
-    operator_contact_email_id = models.EmailField(
-        'Email id', max_length=100, blank=True)
-    operator_profile_photo_file_path = models.CharField(
+    operator_phone_number = models.CharField('Phone Number',
+                                             validators=[phone_regex, MinLengthValidator(10),
+                                                         MaxLengthValidator(13)],
+                                             max_length=13, blank=True)
+    operator_address = models.CharField('Name', max_length=100, blank=True)
+    operator_profile_photo = models.CharField(
         'Profile photo file path', max_length=255, blank=True)
-
-    operator_organization_id = models.IntegerField(
-        'Organization', blank=False, default=0)
-
+    operator_signature = models.CharField(
+        'Signature', max_length=255, blank=True)
+    operator_buses = models.CharField(
+        'Operator Buses', max_length=255, blank=True)
+    operator_ip_address = models.CharField(
+        'IP Address', max_length=100, blank=True)
     operator_created_at = models.IntegerField(
         'Created At', blank=False, default=0)
     operator_created_by = models.IntegerField(
@@ -123,12 +129,15 @@ class Operators(models.Model):
     operator_status = models.IntegerField(
         'Status', blank=False, default=STATUS_UNVERIFIED)
 
+    class Meta:
+        db_table = "operators"
+
     def __unicode__(self):
         return self.operator_id
 
     def get_session_auth_hash(self):
-        key_salt = "acgroup-driver.models.auth.Operators.get_session_auth_hash"
-        return salted_hmac(key_salt, self.operator_password_hash).hexdigest()
+        key_salt = "acgroup-fms.models.auth.Operators.get_session_auth_hash"
+        return salted_hmac(key_salt, self.operator_password).hexdigest()
 
     @classmethod
     def set_redirect_field_name(cls, request, url):
