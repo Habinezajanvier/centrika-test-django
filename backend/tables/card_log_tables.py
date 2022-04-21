@@ -114,12 +114,16 @@ class CardLogsTable(tables.Table):
 
     @staticmethod
     def render_card_log_created_at(record):
+        if record.card_log_created_at == 0:
+            return ''
         return Utils.get_convert_datetime(record.card_log_created_at,
                                           settings.TIME_ZONE,
                                           settings.APP_CONSTANT_DISPLAY_TIME_ZONE) + ' ' + settings.APP_CONSTANT_DISPLAY_TIME_ZONE_INFO
 
     @staticmethod
     def render_card_log_updated_at(record):
+        if record.card_log_updated_at == 0:
+            return ''
         return Utils.get_convert_datetime(record.card_log_updated_at,
                                           settings.TIME_ZONE,
                                           settings.APP_CONSTANT_DISPLAY_TIME_ZONE) + ' ' + settings.APP_CONSTANT_DISPLAY_TIME_ZONE_INFO

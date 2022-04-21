@@ -184,12 +184,16 @@ class TicketsExternalTable(tables.Table):
 
     @staticmethod
     def render_ticket_requested_at(record):
+        if record.ticket_requested_at == 0:
+            return ''
         return Utils.get_convert_datetime(record.ticket_requested_at,
                                           settings.TIME_ZONE,
                                           settings.APP_CONSTANT_DISPLAY_TIME_ZONE) + ' ' + settings.APP_CONSTANT_DISPLAY_TIME_ZONE_INFO
 
     @staticmethod
     def render_ticket_confirmed_at(record):
+        if record.ticket_confirmed_at == 0:
+            return ''
         return Utils.get_convert_datetime(record.ticket_confirmed_at,
                                           settings.TIME_ZONE,
                                           settings.APP_CONSTANT_DISPLAY_TIME_ZONE) + ' ' + settings.APP_CONSTANT_DISPLAY_TIME_ZONE_INFO
