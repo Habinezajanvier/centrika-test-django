@@ -3,13 +3,13 @@
 {% load render_table from django_tables2 %}
 {% block head %}
     <title>{{ APP_CONSTANT_APP_NAME }} : {{ title }}</title>
+    <style>
+        td, th {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+        }
+    </style>
 {% endblock %}
-<style>
-    td, th {
-        white-space: nowrap;
-        overflow: hidden;
-    }
-</style>
 {% block body %}
     {% load static %}{% csrf_token %}
     <script type="text/javascript" charset="utf-8">
