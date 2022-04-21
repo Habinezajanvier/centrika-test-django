@@ -2,7 +2,6 @@ import os
 from decimal import Decimal
 
 import requests
-from django.contrib.auth.hashers import make_password, check_password
 from django.core.validators import MaxLengthValidator
 from django.core.validators import MinLengthValidator
 from django.core.validators import RegexValidator
@@ -15,7 +14,6 @@ from django.utils.safestring import mark_safe
 from tinymce.models import HTMLField
 
 from django.contrib import messages
-from django.contrib.auth.hashers import make_password, check_password
 from django.core import serializers
 from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest, HttpResponseNotFound

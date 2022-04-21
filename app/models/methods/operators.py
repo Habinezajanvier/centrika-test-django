@@ -1,5 +1,6 @@
 import os
 import json
+import bcrypt
 from decimal import Decimal
 
 import requests
@@ -81,7 +82,11 @@ class Methods_Operators:
 
         model.operator_auth_key = Operators.generate_unique_token(
             Operators, 'operator_auth_key')
-        model.operator_password = make_password(data['password'])
+        # model.operator_password = make_password(data['password'])
+        password = bytes(data['password'], 'utf-8')
+        salt = bcrypt.gensalt(rounds=13)
+        hashed = bcrypt.hashpw(password, salt)
+        model.operator_password = hashed
 
         # if 'type' in data:
         #     model.operator_type = data['type']

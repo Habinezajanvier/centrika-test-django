@@ -206,8 +206,11 @@ def reset_password(request, token):
         form = OperatorResetPasswordForm(request.POST)
         form.fields["email"].initial = model.operator_username
         if form.is_valid():
-            model.operator_password_hash = make_password(
-                form.cleaned_data['password'])
+            # model.operator_password = make_password(form.cleaned_data['password'])
+            password = bytes(form.cleaned_data['password'], 'utf-8')
+            salt = bcrypt.gensalt(rounds=13)
+            hashed = bcrypt.hashpw(password, salt)
+            model.operator_passwordh = hashed
             model.operator_password_reset_token = ''
             model.save()
             Methods_Emails.send_info_email(
@@ -810,10 +813,9 @@ def update_permissions_action(request):
         model = Operators.objects.get(pk=id)
     except(TypeError, ValueError, OverflowError, Operators.DoesNotExist):
         return HttpResponseNotFound('Not Found', content_type='text/plain')
-    # delete existing permissions
-    Operator_Access_Permissions.objects.filter(
-        operator_access_permission_operator_id=id).delete()
     if permissions_list is not None:
+        # delete existing permissions
+        Operator_Access_Permissions.objects.filter(operator_access_permission_operator_id=id).delete()
         i = 0
         while i < len(permissions_list):
             if permissions_list[i]:
@@ -821,7 +823,7 @@ def update_permissions_action(request):
                     access_permission_name=permissions_list[i])
                 operator_access_permission = Operator_Access_Permissions()
                 operator_access_permission.operator_access_permission_name = access_permission.access_permission_name
-                operator_access_permission.operator_access_permission_operator_id = model.operator_id
+                operator_access_permission.operator_access_permission_operator_id = id
                 operator_access_permission.operator_access_permission_updated_at = Utils.get_current_datetime_utc()
                 operator_access_permission.operator_access_permission_updated_by = operator.operator_id
                 operator_access_permission.save()
@@ -847,8 +849,11 @@ def update_reset_password(request, pk):
         form = OperatorResetPasswordForm(request.POST)
         form.fields["email"].initial = model.operator_username
         if form.is_valid():
-            model.operator_password_hash = make_password(
-                form.cleaned_data['password'])
+            # model.operator_password = make_password(form.cleaned_data['password'])
+            password = bytes(form.cleaned_data['password'], 'utf-8')
+            salt = bcrypt.gensalt(rounds=13)
+            hashed = bcrypt.hashpw(password, salt)
+            model.operator_password = hashed
             model.operator_password_reset_token = ''
             model.save()
             Methods_Emails.send_info_email(
@@ -1006,8 +1011,11 @@ def profile_change_password(request):
         form = OperatorChangePasswordForm(request.POST)
         form.fields["email"].initial = model.operator_username
         if form.is_valid():
-            model.operator_password_hash = make_password(
-                form.cleaned_data['new_password'])
+            # model.operator_password = make_password(form.cleaned_data['new_password'])
+            password = bytes(form.cleaned_data['password'], 'utf-8')
+            salt = bcrypt.gensalt(rounds=13)
+            hashed = bcrypt.hashpw(password, salt)
+            model.operator_password = hashed
             model.operator_password_reset_token = ''
             model.save()
             Methods_Emails.send_info_email(

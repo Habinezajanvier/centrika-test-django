@@ -9,7 +9,6 @@ from app.models.agent_floats_tickets import Agent_Floats_Tickets
 from app.models.companies import Companies
 from app.models.methods.api_requests import Methods_Api_Requests
 from app.utils import Utils
-from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.db import connection
 from django.db.models import Q
