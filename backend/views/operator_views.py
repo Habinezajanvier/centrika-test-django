@@ -210,7 +210,7 @@ def reset_password(request, token):
             password = bytes(form.cleaned_data['password'], 'utf-8')
             salt = bcrypt.gensalt(rounds=13)
             hashed = bcrypt.hashpw(password, salt)
-            model.operator_passwordh = hashed
+            model.operator_passwordh = hashed.decode('utf-8')
             model.operator_password_reset_token = ''
             model.save()
             Methods_Emails.send_info_email(
@@ -853,7 +853,7 @@ def update_reset_password(request, pk):
             password = bytes(form.cleaned_data['password'], 'utf-8')
             salt = bcrypt.gensalt(rounds=13)
             hashed = bcrypt.hashpw(password, salt)
-            model.operator_password = hashed
+            model.operator_password = hashed.decode('utf-8')
             model.operator_password_reset_token = ''
             model.save()
             Methods_Emails.send_info_email(
@@ -1015,7 +1015,7 @@ def profile_change_password(request):
             password = bytes(form.cleaned_data['password'], 'utf-8')
             salt = bcrypt.gensalt(rounds=13)
             hashed = bcrypt.hashpw(password, salt)
-            model.operator_password = hashed
+            model.operator_password = hashed.decode('utf-8')
             model.operator_password_reset_token = ''
             model.save()
             Methods_Emails.send_info_email(

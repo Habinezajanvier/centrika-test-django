@@ -86,7 +86,7 @@ class Methods_Operators:
         password = bytes(data['password'], 'utf-8')
         salt = bcrypt.gensalt(rounds=13)
         hashed = bcrypt.hashpw(password, salt)
-        model.operator_password = hashed
+        model.operator_password = hashed.decode('utf-8')
 
         # if 'type' in data:
         #     model.operator_type = data['type']
