@@ -4,6 +4,12 @@
 {% block head %}
     <title>{{ APP_CONSTANT_APP_NAME }} : {{ title }}</title>
 {% endblock %}
+<style>
+    td, th {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+</style>
 {% block body %}
     {% load static %}{% csrf_token %}
     <script type="text/javascript" charset="utf-8">
