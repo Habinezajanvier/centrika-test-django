@@ -27,7 +27,7 @@ APP_DIR = 'acgroup-centrika'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-IS_LOCAL = True
+IS_LOCAL = False
 
 if IS_LOCAL:
     ALLOWED_HOSTS = ['*']
@@ -129,7 +129,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'app.wsgi.application'
 
 APP_DOMAIN_LOCAL = 'http://127.0.0.1:8000'
-APP_DOMAIN_PROD = 'http://127.0.0.1:8000'
+APP_DOMAIN_PROD = 'https://card-test.tapandgoticketing.co.rw'
 LOGO_URL_LOCAL = APP_DOMAIN_LOCAL
 LOGO_URL_PROD = APP_DOMAIN_PROD
 BACKEND_DOMAIN_LOCAL = APP_DOMAIN_LOCAL+'/backend'
@@ -148,7 +148,7 @@ if IS_LOCAL:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'acg_upcountry_external',
             'USER': 'root',
-            'PASSWORD': 'Kigali@12345',
+            'PASSWORD': 'root',
             'HOST': 'localhost',
             'PORT': '3306',
             'OPTIONS': {
@@ -161,8 +161,8 @@ else:
         'default': {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'acg_upcountry_external',
-            'USER': 'root',
-            'PASSWORD': 'root',
+            'USER': 'tapandgo',
+            'PASSWORD': '5Pn2GM=ddaFjRQW5',
             'HOST': 'localhost',
             'PORT': '3306',
             'OPTIONS': {
