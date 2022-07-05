@@ -19,9 +19,9 @@ class V2_Methods_Asis():
 
     # Login
     ASIS_TOKEN_URL = ASIS_URL + 'Token/Post'
-    ASIS_USERNAME = 'Ruanda.api'
-    ASIS_PASSWORD = 'As123456'
-    ASIS_GRANT_TYPE = 'password'
+    ASIS_USERNAME = 'Rwapi21v2'  #'Ruanda.api', ''
+    ASIS_PASSWORD = '*23Iisaisbu'  #'As123456', ''
+    ASIS_GRANT_TYPE = ''
     # Session
     ASIS_SESSION_URL = ASIS_URL + 'Purse/StartSession'
     ASIS_END_SESSION_URL = ASIS_URL + 'Purse/EndSession/'
