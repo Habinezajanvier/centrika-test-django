@@ -37,7 +37,7 @@ class V2_Methods_Asis():
     def ap_login_token(cls, request, card_log):
         try:
             url = V2_Methods_Asis.ASIS_TOKEN_URL
-            payload = 'grant_type=password&userName=Ruanda.api&password=As123456'
+            payload = 'grant_type=password&userName='+V2_Methods_Asis.ASIS_USERNAME+'&password='+V2_Methods_Asis.ASIS_PASSWORD
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
