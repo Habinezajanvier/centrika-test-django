@@ -608,7 +608,7 @@ def card_pay_complete(request):
             return send_response(response, HTTP_400_BAD_REQUEST)
 
         error, message, card_content, card_log = V2_Methods_Asis.process_payment(
-            request, operator, None, ticket.ticket_card_number, 200, card_command, access_token, session_data, card_log)
+            request, operator, None, ticket.ticket_card_number, ticket.ticket_price, card_command, access_token, session_data, card_log)
         if error:
             response = {
                 "error": True,
