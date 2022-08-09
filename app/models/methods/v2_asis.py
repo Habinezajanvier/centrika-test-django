@@ -355,9 +355,9 @@ class V2_Methods_Asis():
             card_log.save()
 
         if errorPay:
-            return errorPay, messagePay, None
+            return errorPay, messagePay, None, card_log
         if error:
-            return error, message, None
+            return error, message, None, card_log
 
         return False, 'Success', response_content, card_log
 
